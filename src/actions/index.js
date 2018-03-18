@@ -1,14 +1,13 @@
-import { 
-  NET_POKEMONS_REQUEST, 
-  NET_POKEMONS_SUCCESS_PAGE, 
-//  NET_POKEMONS_SUCCESS, 
-  NET_POKEMONS_FAILURE,
+import {
+  NET_POKEMONS_REQUEST,
+  //  NET_POKEMONS_SUCCESS_PAGE,
+  //  NET_POKEMONS_SUCCESS,
+  //  NET_POKEMONS_FAILURE,
 
-  NET_TYPES_REQUEST,
-  NET_TYPES_SUCCESS,
-  NET_TYPES_FAILURE,
-} from '../constants/ActionTypes'
-
+  NET_TYPES_REQUEST // ,
+  //  NET_TYPES_SUCCESS,
+  //  NET_TYPES_FAILURE,
+} from './ActionTypes'
 
 export const actFetchPokemons = () => ({
   type: NET_POKEMONS_REQUEST

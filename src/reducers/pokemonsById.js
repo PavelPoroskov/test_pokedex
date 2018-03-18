@@ -1,19 +1,20 @@
-import { 
-  NET_POKEMONS_REQUEST, 
-  NET_POKEMONS_SUCCESS_PAGE, 
-//  NET_POKEMONS_SUCCESS, 
+import {
+  //  NET_POKEMONS_REQUEST,
+  NET_POKEMONS_SUCCESS_PAGE,
+  //  NET_POKEMONS_SUCCESS,
   NET_POKEMONS_FAILURE
-} from '../constants/ActionTypes'
-
+} from '../actions/ActionTypes'
 
 const pokemons = (state = {}, action) => {
   switch (action.type) {
     case NET_POKEMONS_SUCCESS_PAGE:
 
-      return { ...state, ...action.objectsById };
+      console.log('Pokemons was loaded')
+      console.dir(action.objectsById)
+      return { ...state, ...action.objectsById }
     case NET_POKEMONS_FAILURE:
-    
-      return {};
+
+      return {}
     default:
       return state
   }

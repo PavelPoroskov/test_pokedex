@@ -1,9 +1,9 @@
 
-import { 
-  NET_TYPES_REQUEST,
+import {
+  //  NET_TYPES_REQUEST,
   NET_TYPES_SUCCESS,
-  NET_TYPES_FAILURE,
-} from '../constants/ActionTypes'
+  NET_TYPES_FAILURE
+} from '../actions/ActionTypes'
 
 const types = (state = [], action) => {
   switch (action.type) {
@@ -11,9 +11,11 @@ const types = (state = [], action) => {
     // debug
       console.log('Types was loaded')
       console.dir(action.list)
-      return action.list;
+      return action.list
     case NET_TYPES_FAILURE:
-      return [];
+
+      console.log('Loading Error')
+      return []
     default:
       return state
   }
