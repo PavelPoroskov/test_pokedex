@@ -1,6 +1,7 @@
 
 // import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import { call, put, takeLatest, all } from 'redux-saga/effects'
+import fetch from 'whatwg-fetch'
 
 import {
   NET_POKEMONS_REQUEST,
@@ -59,46 +60,46 @@ function simplifyObj (o) {
 
 function * workerPage (action) {
   try {
-    let url = 'https://pokeapi.co/api/v2/pokemon/?limit=15'
+    let url = 'https://pokeapi.co/api/v2/pokemon/?limit=20'
 
     while (true) {
       const data = yield call(apifetch, url)
 
-      let ar = []
-      let objRes = {}
-      let list = []
+      let objPage = {}
+      let arPage = []
+
+      let arBatch = []
       for (let i = 0; i < data.results.length; i++) {
-        ar.push(call(apifetch, data.results[i].url))
+        arBatch.push(call(apifetch, data.results[i].url))
 
-        if (ar.length >= 5) {
-          let artemp = yield all(ar)
-          ar = []
+        if (arBatch.length >= 5) {
+          let arBatchRes = yield all(arBatch)
+          arBatch = []
 
-          artemp.forEach(objItem => {
-            objRes[objItem.id] = simplifyObj(objItem)
-            list.push(objItem.id)
+          arBatchRes.forEach(obj => {
+            objPage[obj.id] = simplifyObj(obj)
+            arPage.push(obj.id)
           })
         }
       }
 
-      if (ar.length > 0) {
-        let artemp = yield all(ar)
-        ar = []
+      if (arBatch.length > 0) {
+        let arBatchRes = yield all(arBatch)
+        arBatch = []
 
-        artemp.forEach(objItem => {
-          objRes[objItem.id] = simplifyObj(objItem)
-          list.push(objItem.id)
+        arBatchRes.forEach(obj => {
+          objPage[obj.id] = simplifyObj(obj)
+          arPage.push(obj.id)
         })
       }
 
       yield put({
         type: NET_POKEMONS_SUCCESS_PAGE,
-        objectsById: objRes,
-        list: list
+        objectsById: objPage,
+        list: arPage
       })
 
       // debug
-      // break
       let vdebug = true
       if (vdebug) {
         break
@@ -109,7 +110,6 @@ function * workerPage (action) {
       }
       url = data.next
     }
-  //      yield put( { type: NET_POKEMONS_SUCCESS } );
   } catch (e) {
     yield put({ type: NET_POKEMONS_FAILURE, error: e.message })
   }
