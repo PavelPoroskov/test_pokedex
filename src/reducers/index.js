@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-import items from './pokemons'
-import itemsById from './pokemonsById'
+import items from './items'
+import itemsById from './itemsById'
 
 import types from './types'
 

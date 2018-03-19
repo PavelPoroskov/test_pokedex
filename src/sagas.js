@@ -1,7 +1,8 @@
 
 // import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import { call, put, takeLatest, all, select } from 'redux-saga/effects'
-import 'whatwg-fetch'
+// import apiFetchJson from './api/fetch'
+import { getTypesList, getPokemonsList, getArrPokemons } from './api/cachedfetch'
 
 import {
   NET_ITEMS_REQUEST,
@@ -15,16 +16,11 @@ import {
   NET_TYPES_FAILURE
 } from './actions/ActionTypes'
 
-function apifetch (url) {
-  return window.fetch(url)
-    .then(response => response.json())
-}
-
 function * workerTypes (action) {
   try {
-    let url = 'https://pokeapi.co/api/v2/type?limit=100'
-
-    const data = yield call(apifetch, url)
+    // let url = 'https://pokeapi.co/api/v2/type?limit=100'
+    // const data = yield call(apiFetchJson, url)
+    const data = yield call(getTypesList)
     const list = data.results.map(item => item.name)
 
     yield put({
@@ -64,21 +60,26 @@ function * workerPage (action) {
     // let pageSize = action.pageSize || 20
     const pageSize = yield select(state => state.pageSize)
 
-    let url = `https://pokeapi.co/api/v2/pokemon/?limit=${pageSize}`
+    // let url = `https://pokeapi.co/api/v2/pokemon/?limit=${pageSize}`
+    let offset = 0
+    let limit = pageSize
 
     let toSendFirstPage = true
     while (true) {
-      const data = yield call(apifetch, url)
-
+      // const data = yield call(apiFetchJson, url)
+      const data = yield call(getPokemonsList, {limit, offset})
+      // console.dir(data)
       let objPage = {}
       let arPage = []
 
       let arBatch = []
       for (let i = 0; i < data.results.length; i++) {
-        arBatch.push(call(apifetch, data.results[i].url))
+        // arBatch.push(call(apiFetchJson, data.results[i].url))
+        arBatch.push(data.results[i].name)
 
         if (arBatch.length >= 5) {
-          let arBatchRes = yield all(arBatch)
+          // let arBatchRes = yield all(arBatch)
+          let arBatchRes = yield call(getArrPokemons, arBatch)
           arBatch = []
 
           arBatchRes.forEach(obj => {
@@ -89,7 +90,8 @@ function * workerPage (action) {
       }
 
       if (arBatch.length > 0) {
-        let arBatchRes = yield all(arBatch)
+        // let arBatchRes = yield all(arBatch)
+        let arBatchRes = yield call(getArrPokemons, arBatch)
         arBatch = []
 
         arBatchRes.forEach(obj => {
@@ -113,16 +115,15 @@ function * workerPage (action) {
       }
       yield put(newAction)
 
-      // debug
-      let vdebug = true
-      if (vdebug) {
-        break
-      }
-
       if (!data.next) {
         break
       }
-      url = data.next
+      // url = data.next
+      offset = offset + limit
+      // debug
+      if (offset >= 60) {
+        break
+      }
     }
   } catch (e) {
     yield put({ type: NET_ITEMS_FAILURE, error: e.message })

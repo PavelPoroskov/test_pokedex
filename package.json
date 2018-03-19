@@ -5,6 +5,7 @@
   "homepage": "http://PavelPoroskov.github.io/test_pokedex",
   "dependencies": {
     "object-assign": "4.1.1",
+    "pokeapi-js-wrapper": "^1.1.1",
     "promise": "8.0.1",
     "raf": "3.4.0",
     "react": "^16.2.0",

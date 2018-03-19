@@ -10,12 +10,12 @@ const items = (state = [], action) => {
     case NET_ITEMS_SUCCESS_PAGE:
 
       // debug
-      // console.log('Pokemons was loaded')
-      // console.dir(action.list)
+      // console.log('Items was loaded')
+      // console.dir(action.pageItems)
       return [ ...state, ...action.pageItems ]
     case NET_ITEMS_FAILURE:
       // debug
-      console.log('Loading Error items')
+      console.log('Loading Error items: ' + action.error)
       return []
     default:
       return state
