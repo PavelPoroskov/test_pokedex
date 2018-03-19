@@ -60,7 +60,8 @@ function simplifyObj (o) {
 
 function * workerPage (action) {
   try {
-    let url = 'https://pokeapi.co/api/v2/pokemon/?limit=20'
+    let pageSize = action.pageSize || 20
+    let url = `https://pokeapi.co/api/v2/pokemon/?limit=${pageSize}`
 
     while (true) {
       const data = yield call(apifetch, url)

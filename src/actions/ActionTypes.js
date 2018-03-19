@@ -1,4 +1,5 @@
 
+export const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
 export const SET_PAGE_SIZE = 'SET_PAGE_SIZE'
 
 export const NET_TYPES_REQUEST = 'NET_TYPES_REQUEST'

@@ -9,8 +9,9 @@ import {
   //  NET_TYPES_FAILURE,
 } from './ActionTypes'
 
-export const actFetchPokemons = () => ({
-  type: NET_POKEMONS_REQUEST
+export const actFetchPokemons = (pageSize) => ({
+  type: NET_POKEMONS_REQUEST,
+  pageSize
 })
 
 // export const fetchPostsSucceeded = posts => ({
