@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 
-import { pageSize } from './constants'
+// import { pageSize } from './constants'
 import reducer from './reducers'
 import { actFetchPokemons, actFetchTypes } from './actions'
 import rootSaga from './sagas'
@@ -23,7 +23,7 @@ const store = createStore(
 sagaMiddleware.run(rootSaga)
 
 store.dispatch(actFetchTypes())
-store.dispatch(actFetchPokemons(pageSize))
+store.dispatch(actFetchPokemons())
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { pageSize } from './constants'
+// import { pageSize } from './constants'
 
 function includesSubArr (arr, subArr) {
   for (let j = 0; j < subArr.length; j++) {
@@ -23,42 +23,25 @@ function includesSubArr (arr, subArr) {
 //   return false;
 // }
 
-const selItems = (state) => state.pokemons
-const selItemsById = (state) => state.pokemonsById
+const selItems = (state) => state.items
+const selItemsById = (state) => state.itemsById
 
-const selFilterTypes = (state) => {
-  if (state.filter && state.filter.types) {
-    return state.filter.types
-  }
+const selFilterTypes = (state) => state.filtertypes
+const selFilterSubStr = (state) => state.filtersubstr
 
-  return undefined
-}
-
-const selFilterSubStr = (state) => {
-  if (state.filter && state.filter.substr) {
-    // return state.filter.substr
-    let str = substr.trim().toLowerCase()
-    if (str) {
-      return str
+const selFilterSubStrLow = createSelector(
+  selFilterSubStr,
+  substr => {
+    if (substr) {
+      let str = substr.trim().toLowerCase()
+      if (str) {
+        return str
+      }
     }
+
+    return undefined
   }
-
-  return undefined
-}
-
-// const selFilterSubStrNorm = createSelector(
-//   selFilterSubStr,
-//   (substr) => {
-//     if (substr) {
-//       let str = substr.trim().toLowerCase()
-//       if (str) {
-//         return str
-//       }
-//     }
-
-//     return undefined
-//   }
-// )
+)
 
 const selFilteredByTypes = createSelector(
   selItems,
@@ -76,7 +59,7 @@ const selFilteredByTypes = createSelector(
 const selFilteredBySubStr = createSelector(
   selFilteredByTypes,
   selItemsById,
-  selFilterSubStr,
+  selFilterSubStrLow,
   (items, itemsById, substr) => {
     if (!substr) {
       return items
@@ -88,14 +71,14 @@ const selFilteredBySubStr = createSelector(
 
 export const selFilteredItems = selFilteredBySubStr
 
-const selRemoteSize = (state) => state.remoteSize
-const selPageSize = (state) => state.pageSize || pageSize
+const selRemoteFullSize = (state) => state.remoteFullSize
+const selPageSize = (state) => state.pageSize
 
 const selFilteredSize = (state) => createSelector(
   selFilterTypes,
-  selFilterSubStr,
+  selFilterSubStrLow,
   selFilteredItems,
-  selRemoteSize,
+  selRemoteFullSize,
   selPageSize,
   (types, substr, items, remoteSize, pageSize) => {
     let size
@@ -125,19 +108,7 @@ export const selPagesTotal = (state) => createSelector(
   }
 )
 
-const selCurrentPageNum = (state) => state.currentPage || 1
-// const selCurrentPageNum2 = (state) => createSelector(
-//   selCurrentPageNum,
-//   selPagesTotal,
-//   (curPage, totalPages) => {
-//     if (totalPages < curPage) {
-//       return totalPages
-//       return 1
-//     }
-
-//     return curPage
-//   }
-// )
+const selCurrentPageNum = (state) => state.currentPageNum
 
 // pageNum: 1..n
 export const selCurrentPageItems = (state) => createSelector(

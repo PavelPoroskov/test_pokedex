@@ -1,13 +1,14 @@
 
 // import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import { call, put, takeLatest, all } from 'redux-saga/effects'
-import fetch from 'whatwg-fetch'
+import { call, put, takeLatest, all, select } from 'redux-saga/effects'
+import 'whatwg-fetch'
 
 import {
-  NET_POKEMONS_REQUEST,
-  NET_POKEMONS_SUCCESS_PAGE,
-  //  NET_POKEMONS_SUCCESS,
-  NET_POKEMONS_FAILURE,
+  NET_ITEMS_REQUEST,
+  NET_ITEMS_SUCCESS_PAGE_FIRST,
+  NET_ITEMS_SUCCESS_PAGE,
+  //  NET_ITEMS_SUCCESS,
+  NET_ITEMS_FAILURE,
 
   NET_TYPES_REQUEST,
   NET_TYPES_SUCCESS,
@@ -15,7 +16,7 @@ import {
 } from './actions/ActionTypes'
 
 function apifetch (url) {
-  return fetch(url)
+  return window.fetch(url)
     .then(response => response.json())
 }
 
@@ -60,9 +61,12 @@ function simplifyObj (o) {
 
 function * workerPage (action) {
   try {
-    let pageSize = action.pageSize || 20
+    // let pageSize = action.pageSize || 20
+    const pageSize = yield select(state => state.pageSize)
+
     let url = `https://pokeapi.co/api/v2/pokemon/?limit=${pageSize}`
 
+    let toSendFirstPage = true
     while (true) {
       const data = yield call(apifetch, url)
 
@@ -94,11 +98,20 @@ function * workerPage (action) {
         })
       }
 
-      yield put({
-        type: NET_POKEMONS_SUCCESS_PAGE,
-        objectsById: objPage,
-        list: arPage
-      })
+      let newAction = {
+        type: NET_ITEMS_SUCCESS_PAGE,
+        pageItemsById: objPage,
+        pageItems: arPage
+      }
+      if (toSendFirstPage) {
+        newAction = {
+          ...newAction,
+          type: NET_ITEMS_SUCCESS_PAGE_FIRST,
+          remoteFullSize: data.count
+        }
+        toSendFirstPage = false
+      }
+      yield put(newAction)
 
       // debug
       let vdebug = true
@@ -112,12 +125,12 @@ function * workerPage (action) {
       url = data.next
     }
   } catch (e) {
-    yield put({ type: NET_POKEMONS_FAILURE, error: e.message })
+    yield put({ type: NET_ITEMS_FAILURE, error: e.message })
   }
 }
 
 function * watcherPage () {
-  yield takeLatest(NET_POKEMONS_REQUEST, workerPage)
+  yield takeLatest(NET_ITEMS_REQUEST, workerPage)
 }
 
 export default function * rootSaga () {

@@ -1,20 +1,29 @@
 import { combineReducers } from 'redux'
 
+import items from './pokemons'
+import itemsById from './pokemonsById'
+
 import types from './types'
-import pokemons from './pokemons'
-import pokemonsById from './pokemonsById'
+
+import filtersubstr from './filtersubstr'
+import filtertypes from './filtertypes'
+
+import pageSize from './pageSize'
+import currentPageNum from './currentPageNum'
+import remoteFullSize from './remoteFullSize'
 
 const rootReducer = combineReducers({
-  types, // [name, name2, ...]
-  pokemons, // [id1, id2, ...]
-  pokemonsById
+  items, // [id1, id2, ...]
+  itemsById, // { id1: {...}, id2: {...}, ...}
 
-  // count
-  // offset // loadingDone
-  // ,
-  // filter: combineReducers({
-  //   substring: filtersubstr,
-  //   types: filtertypes
+  types, // [name, name2, ...]
+
+  filtersubstr, // "qw"
+  filtertypes, // [name3, name4, ...]
+
+  pageSize,
+  currentPageNum,
+  remoteFullSize
 })
 
 export default rootReducer

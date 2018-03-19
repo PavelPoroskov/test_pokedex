@@ -1,17 +1,18 @@
 import {
-  NET_POKEMONS_REQUEST,
-  //  NET_POKEMONS_SUCCESS_PAGE,
-  //  NET_POKEMONS_SUCCESS,
-  //  NET_POKEMONS_FAILURE,
+  NET_ITEMS_REQUEST,
+  //  NET_ITEMS_SUCCESS_PAGE,
+  //  NET_ITEMS_SUCCESS,
+  //  NET_ITEMS_FAILURE,
 
   NET_TYPES_REQUEST // ,
   //  NET_TYPES_SUCCESS,
   //  NET_TYPES_FAILURE,
 } from './ActionTypes'
 
-export const actFetchPokemons = (pageSize) => ({
-  type: NET_POKEMONS_REQUEST,
-  pageSize
+// import { initPageSize } from './constants'
+
+export const actFetchPokemons = () => ({
+  type: NET_ITEMS_REQUEST
 })
 
 // export const fetchPostsSucceeded = posts => ({

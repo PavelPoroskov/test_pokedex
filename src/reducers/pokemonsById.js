@@ -1,23 +1,24 @@
 import {
-  //  NET_POKEMONS_REQUEST,
-  NET_POKEMONS_SUCCESS_PAGE,
-  //  NET_POKEMONS_SUCCESS,
-  NET_POKEMONS_FAILURE
+  NET_ITEMS_SUCCESS_PAGE_FIRST,
+  NET_ITEMS_SUCCESS_PAGE,
+  NET_ITEMS_FAILURE
 } from '../actions/ActionTypes'
 
-const pokemons = (state = {}, action) => {
+const itemsById = (state = {}, action) => {
   switch (action.type) {
-    case NET_POKEMONS_SUCCESS_PAGE:
+    case NET_ITEMS_SUCCESS_PAGE_FIRST:
+    case NET_ITEMS_SUCCESS_PAGE:
 
       console.log('Pokemons was loaded')
-      console.dir(action.objectsById)
-      return { ...state, ...action.objectsById }
-    case NET_POKEMONS_FAILURE:
+      console.dir(action.pageItemsById)
+      return { ...state, ...action.pageItemsById }
+    case NET_ITEMS_FAILURE:
 
+      console.log('Loading Error itemsById')
       return {}
     default:
       return state
   }
 }
 
-export default pokemons
+export default itemsById
