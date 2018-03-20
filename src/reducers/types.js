@@ -9,8 +9,8 @@ const types = (state = [], action) => {
   switch (action.type) {
     case NET_TYPES_SUCCESS:
     // debug
-      console.log('Types was loaded')
-      console.dir(action.list)
+      // console.log('Types was loaded')
+      // console.dir(action.list)
       return action.list
     case NET_TYPES_FAILURE:
 

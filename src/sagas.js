@@ -100,27 +100,31 @@ function * workerPage (action) {
         })
       }
 
-      let newAction = {
-        type: NET_ITEMS_SUCCESS_PAGE,
-        pageItemsById: objPage,
-        pageItems: arPage
-      }
-      if (toSendFirstPage) {
-        newAction = {
-          ...newAction,
-          type: NET_ITEMS_SUCCESS_PAGE_FIRST,
-          remoteFullSize: data.count
+      if (arPage.length > 0) {
+        let newAction = {
+          type: NET_ITEMS_SUCCESS_PAGE,
+          pageItemsById: objPage,
+          pageItems: arPage,
+          first: offset + 1,
+          last: offset + arPage.length
         }
-        toSendFirstPage = false
+        if (toSendFirstPage) {
+          newAction = {
+            ...newAction,
+            type: NET_ITEMS_SUCCESS_PAGE_FIRST,
+            remoteFullSize: data.count
+          }
+          toSendFirstPage = false
+        }
+        yield put(newAction)
       }
-      yield put(newAction)
 
       if (!data.next) {
         break
       }
       offset = offset + limit
       // debug
-      if (offset >= 60) {
+      if (offset >= 30) {
         break
       }
     }

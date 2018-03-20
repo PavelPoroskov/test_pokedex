@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 import items from './items'
 import itemsById from './itemsById'
+// import loadedIntervals from './loadedIntervals'
 
 import types from './types'
 
@@ -24,6 +25,8 @@ const rootReducer = combineReducers({
   pageSize,
   currentPageNum,
   remoteFullSize
+
+  // loadedIntervals
 })
 
 export default rootReducer

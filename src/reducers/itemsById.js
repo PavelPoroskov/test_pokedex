@@ -9,8 +9,8 @@ const itemsById = (state = {}, action) => {
     case NET_ITEMS_SUCCESS_PAGE_FIRST:
     case NET_ITEMS_SUCCESS_PAGE:
 
-      console.log('itemsById was loaded')
-      console.dir(action.pageItemsById)
+      // console.log('itemsById was loaded')
+      // console.dir(action.pageItemsById)
       return { ...state, ...action.pageItemsById }
     case NET_ITEMS_FAILURE:
 
