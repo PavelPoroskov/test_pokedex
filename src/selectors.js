@@ -1,7 +1,5 @@
 import { createSelector } from 'reselect'
 
-// import { pageSize } from './constants'
-
 function includesSubArr (arr, subArr) {
   for (let j = 0; j < subArr.length; j++) {
     if (!arr.includes(subArr[j])) {
@@ -24,7 +22,7 @@ function includesSubArr (arr, subArr) {
 // }
 
 const selItems = (state) => state.items
-const selItemsById = (state) => state.itemsById
+export const selItemsById = (state) => state.itemsById
 
 const selFilterTypes = (state) => state.filtertypes
 const selFilterSubStr = (state) => state.filtersubstr
@@ -74,7 +72,7 @@ export const selFilteredItems = selFilteredBySubStr
 const selRemoteFullSize = (state) => state.remoteFullSize
 const selPageSize = (state) => state.pageSize
 
-const selFilteredSize = (state) => createSelector(
+const selFilteredSize = createSelector(
   selFilterTypes,
   selFilterSubStrLow,
   selFilteredItems,
@@ -95,7 +93,7 @@ const selFilteredSize = (state) => createSelector(
   }
 )
 
-export const selPagesTotal = (state) => createSelector(
+export const selPagesTotal = createSelector(
   selFilteredSize,
   selPageSize,
   (sizeAll, pageSize) => {
@@ -111,7 +109,7 @@ export const selPagesTotal = (state) => createSelector(
 const selCurrentPageNum = (state) => state.currentPageNum
 
 // pageNum: 1..n
-export const selCurrentPageItems = (state) => createSelector(
+export const selCurrentPageItems = createSelector(
   selFilteredItems,
   selCurrentPageNum,
   selPageSize,

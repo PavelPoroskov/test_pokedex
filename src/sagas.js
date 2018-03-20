@@ -118,7 +118,6 @@ function * workerPage (action) {
       if (!data.next) {
         break
       }
-      // url = data.next
       offset = offset + limit
       // debug
       if (offset >= 60) {

@@ -13,8 +13,8 @@ import currentPageNum from './currentPageNum'
 import remoteFullSize from './remoteFullSize'
 
 const rootReducer = combineReducers({
-  items, // [id1, id2, ...]
   itemsById, // { id1: {...}, id2: {...}, ...}
+  items, // [id1, id2, ...]
 
   types, // [name, name2, ...]
 

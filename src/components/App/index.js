@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import TableWithData from '../../containers/TableWithData'
+import TableWithData from '../TableWithData'
 
 import './App.css'
 
