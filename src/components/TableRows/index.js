@@ -14,13 +14,21 @@ const ObjToRow = obj => arColumns.map(col => {
     if (col.type === 'image') {
       content = <img src={obj[col.from]} alt={obj['name']} />
     } else if (col.type === 'tags') {
-      content = obj[col.from].map((tag, ind) => <div key={ind}>{tag}</div>)
+      content = obj[col.from].map((tag, ind, arr) =>
+        <React.Fragment>
+          <div key={ind} className={`type type-${tag}`}>{tag}</div>
+          {(ind < arr.length - 1) && <br />}
+        </React.Fragment>
+      )
     } else {
       content = obj[col.from]
     }
   }
 
-  return content
+  return {
+    content,
+    className: col.className
+  }
 })
 
 const idsToRows = (ids, obj) => ids.map(id => ({

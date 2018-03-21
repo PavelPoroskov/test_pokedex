@@ -9,7 +9,8 @@ class TableWithData extends Component {
   render () {
     console.log('render TableWithData')
 
-    const titles = arColumns.map((col, ind) => <th key={ind}>{col.title}</th>)
+    const titles = arColumns.map((col, ind) =>
+      <th key={ind} className={col.className}>{col.title}</th>)
 
     return (
       <table>

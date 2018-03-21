@@ -19,9 +19,9 @@ const loadedIntervals = (state = [], action) => {
           let curInt = intervals[i]
 
           let beg = Math.max(prevInt[0], curInt[0])
-          let end = Math.min(prevInt[1], curInt[1])
           // let end = Math.min(prevInt[1] + 1, curInt[1])
-
+          // if (beg <= end) {
+          let end = Math.min(prevInt[1], curInt[1])
           if (beg <= end || (prevInt[1] + 1 === curInt[0])) {
             // intersect, unit intervals
             prevInt[1] = curInt[1]

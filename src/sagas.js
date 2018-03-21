@@ -36,10 +36,14 @@ function * watcherTypes () {
   yield takeLatest(NET_TYPES_REQUEST, workerTypes)
 }
 
+const capitalizeStr = (s) =>
+  s && s[0].toUpperCase() + s.slice(1)
+
 function simplifyObj (o) {
   return {
     id: o.id,
     name: o.name,
+    Name: capitalizeStr(o.name),
 
     front_default: o.sprites.front_default,
     front_shiny: o.sprites.front_shiny,

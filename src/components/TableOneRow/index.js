@@ -10,7 +10,8 @@ class TableOneRow extends Component {
     const {row, id} = this.props
 
     console.log('render TableOneRow, id: ' + id)
-    const cells = row.map((cell, ind) => <td key={ind}>{cell}</td>)
+    const cells = row.map((cell, ind) =>
+      <td key={ind} className={cell.className}>{cell.content}</td>)
 
     return (
       <tr>
