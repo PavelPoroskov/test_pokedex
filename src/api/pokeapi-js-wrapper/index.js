@@ -4,6 +4,9 @@ import { loadResource } from './getter.js'
 import { values } from './default.js'
 import { configurator } from './configurator.js'
 
+import merge from 'loadash.merge'
+import schemas from '../schemas'
+
 export class Pokedex {
   constructor (config) {
     configurator.setPokedexConfiguration(config)
@@ -15,11 +18,18 @@ export class Pokedex {
         if (input) {
           // if the user has submitted a Name or an ID, return the JSON promise
           if (typeof input === 'number' || typeof input === 'string') {
-            return loadResource(`${values.versionPath}${endpoint[1]}/${input}/`)
+            return loadResource(`${values.versionPath}${endpoint[1]}/${input}/`, endpoint[1])
           } else if (typeof input === 'object') {
-          // if the user has submitted an Array
-          // return a new promise which will resolve when all loadResource calls are ended
-            return Promise.all(mapResources(endpoint, input))
+          // // if the user has submitted an Array
+          // // return a new promise which will resolve when all loadResource calls are ended
+          //   return Promise.all(mapResources(endpoint, input))
+
+            if (schemas[endpoint[1]]) {
+              return Promise.all(mapResources(endpoint, input))
+                .then(results => merge(...results))
+            } else {
+              return Promise.all(mapResources(endpoint, input))
+            }
           }
         }
       }
@@ -55,6 +65,6 @@ export class Pokedex {
 
 function mapResources (endpoint, input) {
   return input.map(res => {
-    return loadResource(`${values.versionPath}${endpoint[1]}/${res}/`)
+    return loadResource(`${values.versionPath}${endpoint[1]}/${res}/`, endpoint[1])
   })
 }

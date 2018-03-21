@@ -1,8 +1,9 @@
 
 // import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import { call, put, takeLatest, all, select } from 'redux-saga/effects'
-// import apiFetchJson from './api/fetch'
-import { getTypesList, getPokemonsList, getArrPokemons } from './api/cachedfetch'
+import merge from 'loadash.merge'
+
+import { fetchTypesList, fetchPokemonsList, fetchPokemons } from './api/cachedfetch'
 
 import {
   NET_ITEMS_REQUEST,
@@ -20,7 +21,7 @@ function * workerTypes (action) {
   try {
     // let url = 'https://pokeapi.co/api/v2/type?limit=100'
     // const data = yield call(apiFetchJson, url)
-    const data = yield call(getTypesList)
+    const data = yield call(fetchTypesList)
     const list = data.results.map(item => item.name)
 
     yield put({
@@ -36,29 +37,6 @@ function * watcherTypes () {
   yield takeLatest(NET_TYPES_REQUEST, workerTypes)
 }
 
-const capitalizeStr = (s) =>
-  s && s[0].toUpperCase() + s.slice(1)
-
-function simplifyObj (o) {
-  return {
-    id: o.id,
-    name: o.name,
-    Name: capitalizeStr(o.name),
-
-    front_default: o.sprites.front_default,
-    front_shiny: o.sprites.front_shiny,
-
-    types: o.types.map(i => i.type.name),
-
-    ...(o.stats.reduce((objSum, i) => {
-      objSum[i.stat.name] = i.base_stat
-      return objSum
-    }, {})),
-
-    total: o.stats.reduce((iSum, i) => (iSum + i.base_stat), 0)
-  }
-}
-
 function * workerPage (action) {
   try {
     // let pageSize = action.pageSize || 20
@@ -70,47 +48,36 @@ function * workerPage (action) {
 
     let toSendFirstPage = true
     while (true) {
-      // const data = yield call(apiFetchJson, url)
-      const data = yield call(getPokemonsList, {limit, offset})
+      const data = yield call(fetchPokemonsList, {limit, offset})
       // console.dir(data)
-      let objPage = {}
-      let arPage = []
+      let oResult = {}
 
       let arBatch = []
+      let nReceived = 0
       for (let i = 0; i < data.results.length; i++) {
-        // arBatch.push(call(apiFetchJson, data.results[i].url))
         arBatch.push(data.results[i].name)
 
         if (arBatch.length >= 5) {
-          // let arBatchRes = yield all(arBatch)
-          let arBatchRes = yield call(getArrPokemons, arBatch)
+          let arBatchRes = yield call(fetchPokemons, arBatch)
+          nReceived = nReceived + arBatchRes.length
           arBatch = []
-
-          arBatchRes.forEach(obj => {
-            objPage[obj.id] = simplifyObj(obj)
-            arPage.push(obj.id)
-          })
+          oResult = merge(oResult, arBatchRes)
         }
       }
 
       if (arBatch.length > 0) {
-        // let arBatchRes = yield all(arBatch)
-        let arBatchRes = yield call(getArrPokemons, arBatch)
+        let arBatchRes = yield call(fetchPokemons, arBatch)
+        nReceived = nReceived + arBatchRes.length
         arBatch = []
-
-        arBatchRes.forEach(obj => {
-          objPage[obj.id] = simplifyObj(obj)
-          arPage.push(obj.id)
-        })
+        oResult = merge(oResult, arBatchRes)
       }
 
-      if (arPage.length > 0) {
+      if (oResult) {
         let newAction = {
           type: NET_ITEMS_SUCCESS_PAGE,
-          pageItemsById: objPage,
-          pageItems: arPage,
+          ...oResult, // entities: {...}
           first: offset + 1,
-          last: offset + arPage.length
+          last: offset + nReceived
         }
         if (toSendFirstPage) {
           newAction = {

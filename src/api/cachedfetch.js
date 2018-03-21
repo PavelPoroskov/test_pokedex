@@ -1,6 +1,9 @@
-// const Pokedex = require('pokeapi-js-wrapper')
-// const P = new Pokedex.Pokedex(options)
+// import { normalize } from 'normalizr'
+// import merge from 'loadash.merge'
+
 import {Pokedex} from './pokeapi-js-wrapper'
+
+// import schemaPokemon from './pokemon.schema.js'
 
 const options = {
   protocol: 'https',
@@ -10,13 +13,24 @@ const options = {
 }
 const P = new Pokedex(options)
 
-export const getTypesList = () => P.getTypesList()
+export const fetchTypesList = () => P.getTypesList()
 
-export const getPokemonsList = ({offset, limit}) => {
+export const fetchPokemonsList = ({offset, limit}) => {
   return P.getPokemonsList({offset, limit})
 }
 
-export const getArrPokemons = (arr) => {
+// export const fetchPokemons = (arr) => {
+//   return P.getPokemonByName(arr)
+// }
+
+// export const fetchPokemons = (arr) => {
+//   return P.getPokemonByName(arr)
+//     .then(results => results.map(data => normalize(data, schemaPokemon)))
+//     // .then(results => results.map(data => data.entities))
+//     .then(results => merge(...results))
+// }
+
+export const fetchPokemons = (arr) => {
   return P.getPokemonByName(arr)
 }
 
