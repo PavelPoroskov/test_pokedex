@@ -2,7 +2,7 @@
 // import { normalize, schema } from 'normalizr'
 import { schema } from 'normalizr'
 
-const type = new schema.Entity('types', {}, {
+const typeRef = new schema.Entity('typeRefs', {}, {
   idAttribute: 'name'
 })
 
@@ -11,7 +11,7 @@ const capitalizeStr = (s) =>
 
 const pokemon = new schema.Entity('pokemons',
   {
-    types: [ type ]
+    types: [ typeRef ]
   },
   {
     idAttribute: 'name',

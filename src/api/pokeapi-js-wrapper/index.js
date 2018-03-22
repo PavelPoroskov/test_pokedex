@@ -4,8 +4,8 @@ import { loadResource } from './getter.js'
 import { values } from './default.js'
 import { configurator } from './configurator.js'
 
-import merge from 'loadash.merge'
-import schemas from '../schemas'
+// import merge from 'lodash.merge'
+// import schemas from '../schemas'
 
 export class Pokedex {
   constructor (config) {
@@ -20,16 +20,16 @@ export class Pokedex {
           if (typeof input === 'number' || typeof input === 'string') {
             return loadResource(`${values.versionPath}${endpoint[1]}/${input}/`, endpoint[1])
           } else if (typeof input === 'object') {
-          // // if the user has submitted an Array
-          // // return a new promise which will resolve when all loadResource calls are ended
-          //   return Promise.all(mapResources(endpoint, input))
+          // if the user has submitted an Array
+          // return a new promise which will resolve when all loadResource calls are ended
+            return Promise.all(mapResources(endpoint, input))
 
-            if (schemas[endpoint[1]]) {
-              return Promise.all(mapResources(endpoint, input))
-                .then(results => merge(...results))
-            } else {
-              return Promise.all(mapResources(endpoint, input))
-            }
+            // if (schemas[endpoint[1]]) {
+            //   return Promise.all(mapResources(endpoint, input))
+            //     .then(results => merge(...results))
+            // } else {
+            //   return Promise.all(mapResources(endpoint, input))
+            // }
           }
         }
       }
@@ -47,7 +47,8 @@ export class Pokedex {
             limit = config.limit
           }
         }
-        return loadResource(`${values.versionPath}${rootEndpoint[1]}?limit=${limit}&offset=${offset}`)
+        return loadResource(`${values.versionPath}${rootEndpoint[1]}?limit=${limit}&offset=${offset}`,
+          rootEndpoint[1])
       }
     })
   }

@@ -1,86 +1,51 @@
 
-import { call, put, takeLatest, select } from 'redux-saga/effects'
-import merge from 'loadash.merge'
+import { call, put, select } from 'redux-saga/effects'
 
-import {
-  NET_ITEMS_REQUEST,
-  NET_ITEMS_SUCCESS_PAGE_FIRST,
-  NET_ITEMS_SUCCESS_PAGE,
-  //  NET_ITEMS_SUCCESS,
-  NET_ITEMS_FAILURE
-} from './actions/ActionTypes'
+import { fetchPokemonsList, fetchPokemons } from '../api/cachedfetch'
+import { actSetEntities } from '../actions'
 
-import { fetchPokemonsList, fetchPokemons } from './api/cachedfetch'
+export function * sagaFetchPokemonsList (opt) {
+  // const {offset, limit} = opt
 
-function * workerPage (action) {
-  try {
-    // let pageSize = action.pageSize || 20
-    const pageSize = yield select(state => state.pageSize)
+  // const pageSize = yield select(state => state.pageSize)
 
-    // let url = `https://pokeapi.co/api/v2/pokemon/?limit=${pageSize}`
-    let offset = 0
-    let limit = pageSize
+  // const data = yield call(fetchPokemonsList, {
+  //   limit: limit || pageSize,
+  //   offset: offset || 0
+  // })
+  const data = yield call(fetchPokemonsList, opt)
 
-    let toSendFirstPage = true
-    while (true) {
-      const data = yield call(fetchPokemonsList, {limit, offset})
-      // console.dir(data)
-      let oResult = {}
+  return data.result.results
+}
 
-      let arBatch = []
-      let nReceived = 0
-      for (let i = 0; i < data.results.length; i++) {
-        arBatch.push(data.results[i].name)
+// function * sagaFetchPokemons (arNames) {
+//   const data = yield call(fetchPokemons, arNames)
 
-        if (arBatch.length >= 5) {
-          let arBatchRes = yield call(fetchPokemons, arBatch)
-          nReceived = nReceived + arBatchRes.length
-          arBatch = []
-          oResult = merge(oResult, arBatchRes)
-        }
-      }
+//   yield put(actSetEntities({
+//     ...data // entities: {...}
+//   }))
 
-      if (arBatch.length > 0) {
-        let arBatchRes = yield call(fetchPokemons, arBatch)
-        nReceived = nReceived + arBatchRes.length
-        arBatch = []
-        oResult = merge(oResult, arBatchRes)
-      }
+//   return data.result
+// }
 
-      if (oResult) {
-        let newAction = {
-          type: NET_ITEMS_SUCCESS_PAGE,
-          ...oResult, // entities: {...}
-          first: offset + 1,
-          last: offset + nReceived
-        }
-        if (toSendFirstPage) {
-          newAction = {
-            ...newAction,
-            type: NET_ITEMS_SUCCESS_PAGE_FIRST,
-            remoteFullSize: data.count
-          }
-          toSendFirstPage = false
-        }
-        yield put(newAction)
-      }
+export function * sagaFetchPokemons (arNames) {
+  const pokemons = yield select(state => state.entities.pokemons)
+  const arFiltered = arNames.filter(name => !(name in pokemons))
 
-      if (!data.next) {
-        break
-      }
-      offset = offset + limit
-      // debug
-      if (offset >= 30) {
-        break
-      }
-    }
-  } catch (e) {
-    yield put({ type: NET_ITEMS_FAILURE, error: e.message })
+  if (arFiltered) {
+    const data = yield call(fetchPokemons, arFiltered)
+    // console.log('data')
+    // console.log(data)
+
+    yield put(actSetEntities({
+      ...data // entities: {...}
+    }))
   }
+
+  return arNames
 }
 
-function * watcherPage () {
-  yield takeLatest(NET_ITEMS_REQUEST, workerPage)
-}
-
-export default watcherPage
+// export default {
+//   sagaFetchPokemonsList,
+//   sagaFetchPokemons
+// }

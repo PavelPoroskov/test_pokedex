@@ -1,4 +1,4 @@
-export const initPageSize = 3
+export const initPageSize = 7
 
 // column
 export const arColumns = [

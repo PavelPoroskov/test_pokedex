@@ -1,31 +1,42 @@
 import {
   NET_ITEMS_REQUEST,
-  //  NET_ITEMS_SUCCESS_PAGE,
+  NET_ITEMS_SUCCESS_BATCH,
   //  NET_ITEMS_SUCCESS,
-  //  NET_ITEMS_FAILURE,
+  NET_ITEMS_FAILURE,
 
-  NET_TYPES_REQUEST // ,
+  // SET_PAGE_SIZE,
+  SET_ENTITIES
   //  NET_TYPES_SUCCESS,
   //  NET_TYPES_FAILURE,
 } from './ActionTypes'
 
 // import { initPageSize } from './constants'
 
-export const actFetchPokemons = () => ({
-  type: NET_ITEMS_REQUEST
-})
-
-// export const fetchPostsSucceeded = posts => ({
-//   type: POSTS_FETCH_SUCCEEDED,
-//   posts,
-//   receivedAt: Date.now()
+// export const actSetPageSize = (pageSize) => ({
+//   type: SET_PAGE_SIZE,
+//   pageSize
 // })
 
-// export const fetchPostsFailed = message => ({
-//   type: POSTS_FETCH_FAILED,
-//   message
-// })
-
-export const actFetchTypes = () => ({
-  type: NET_TYPES_REQUEST
+// opt = {resource, offset, limit, id}
+export const actFetchPage = (opt) => ({
+  type: NET_ITEMS_REQUEST,
+  ...opt
 })
+
+export const actFetchPageBatchSucces = (opt) => ({
+  type: NET_ITEMS_SUCCESS_BATCH,
+  ...opt
+})
+export const actFetchPageFailure = (opt) => ({
+  type: NET_ITEMS_FAILURE,
+  ...opt
+})
+
+export const actSetEntities = (opt) => ({
+  type: SET_ENTITIES,
+  ...opt
+})
+
+// export const actFetchTypes = () => ({
+//   type: NET_TYPES_REQUEST
+// })

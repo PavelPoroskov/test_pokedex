@@ -54,9 +54,15 @@ function loadUrl (url, restEndpoint) {
           // resolve(addCacheMark(response.data, 0))
 
           let data = response.data
-          if (restEndpoint && schemas[restEndpoint]) {
-            data = normalize(data, schemas[restEndpoint])
-            // data = data.entities
+          if (restEndpoint) {
+            let strRestEndpoint = restEndpoint
+            if (restEndpoint[restEndpoint.length - 1] === '/') {
+              strRestEndpoint = restEndpoint.slice(0, -1) + 'List'
+            }
+            if (schemas[strRestEndpoint]) {
+              data = normalize(data, schemas[strRestEndpoint])
+              // data = data.entities
+            }
           }
           if (values.cache) {
             localForage.setItem(`${CACHE_PREFIX}${url}`, data)

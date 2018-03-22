@@ -1,5 +1,5 @@
 // import { normalize } from 'normalizr'
-// import merge from 'loadash.merge'
+import merge from 'lodash.merge'
 
 import {Pokedex} from './pokeapi-js-wrapper'
 
@@ -32,6 +32,11 @@ export const fetchPokemonsList = ({offset, limit}) => {
 
 export const fetchPokemons = (arr) => {
   return P.getPokemonByName(arr)
+    // .then(arRes => arRes.map(item => {
+    //   const {result, ...restobj} = item
+    //   return {...restobj, result: [result]}
+    // }))
+    .then(arRes => merge(...arRes))
 }
 
 // this module not pass throw npm run build:

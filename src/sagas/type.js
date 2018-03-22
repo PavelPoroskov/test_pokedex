@@ -6,7 +6,7 @@ import {
   NET_TYPES_FAILURE
 } from './actions/ActionTypes'
 
-import { fetchTypesList } from './api/cachedfetch'
+import { fetchTypesList, fetchTypes } from './api/cachedfetch'
 
 function * workerTypes (action) {
   try {
@@ -24,8 +24,10 @@ function * workerTypes (action) {
   }
 }
 
-function * watcherTypes () {
+function * sagaFetchPokemonsListByType () {
   yield takeLatest(NET_TYPES_REQUEST, workerTypes)
 }
 
-export default watcherTypes
+export sagaFetchTypesList
+export sagaFetchTypes
+export sagaFetchPokemonsListByType

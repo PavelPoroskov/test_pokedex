@@ -5,36 +5,12 @@ import { connect } from 'react-redux'
 
 import TableOneRow from '../TableOneRow'
 
-import {selCurrentPageItems, selItemsById} from '../../selectors'
-import {arColumns} from '../../constants'
+import {selCurrentPageItems} from '../../selectors'
 
-const ObjToRow = obj => arColumns.map(col => {
-  let content = null
-  if (col.from) {
-    if (col.type === 'image') {
-      content = <img src={obj[col.from]} alt={obj['name']} />
-    } else if (col.type === 'tags') {
-      content = obj[col.from].map((tag, ind, arr) =>
-        <React.Fragment>
-          <div key={ind} className={`type type-${tag}`}>{tag}</div>
-          {(ind < arr.length - 1) && <br />}
-        </React.Fragment>
-      )
-    } else {
-      content = obj[col.from]
-    }
-  }
-
-  return {
-    content,
-    className: col.className
-  }
-})
-
-const idsToRows = (ids, obj) => ids.map(id => ({
-  cells: ObjToRow(obj[id]),
-  id
-}))
+// const idsToRows = (ids, obj) => ids.map(id => ({
+//   cells: ObjToRow(obj[id]),
+//   id
+// }))
 
 class TableRows extends Component {
   shouldComponentUpdate (nextProps, nextState) {
@@ -44,22 +20,18 @@ class TableRows extends Component {
   render () {
     console.log('render TableRows')
 
-    const { ids, objById } = this.props
-    const rows = idsToRows(ids, objById)
-
-    return rows.map(row =>
-      <TableOneRow row={row.cells} id={row.id} key={row.id} />)
+    const ids = this.props.ids
+    return ids.map(id =>
+      <TableOneRow id={id} key={id} />)
   }
 }
 
 TableRows.propTypes = {
-  ids: PropTypes.array.isRequired,
-  objById: PropTypes.object.isRequired
+  ids: PropTypes.array.isRequired
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  ids: selCurrentPageItems(state),
-  objById: selItemsById(state)
+  ids: selCurrentPageItems(state)
 })
 
 export default connect(mapStateToProps)(TableRows)
