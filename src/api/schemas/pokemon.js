@@ -14,7 +14,7 @@ const pokemon = new schema.Entity('pokemons',
     types: [ type ]
   },
   {
-    idAttribute: 'id',
+    idAttribute: 'name',
     processStrategy: (entity) => {
       const {
         // omit

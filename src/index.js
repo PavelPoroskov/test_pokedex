@@ -6,11 +6,12 @@ import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 
 // import { pageSize } from './constants'
-import reducer from './reducers'
-import { actFetchPokemons, actFetchTypes } from './actions'
+import { actFetchPokemons } from './actions'
 import rootSaga from './sagas'
+import reducer from './reducers'
 
 import App from './components/App'
+
 import './index.css'
 
 const sagaMiddleware = createSagaMiddleware()
@@ -22,7 +23,7 @@ const store = createStore(
 
 sagaMiddleware.run(rootSaga)
 
-store.dispatch(actFetchTypes())
+// store.dispatch(actFetchTypes())
 store.dispatch(actFetchPokemons())
 
 ReactDOM.render(

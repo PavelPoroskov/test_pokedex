@@ -1,41 +1,16 @@
 
-// import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import { call, put, takeLatest, all, select } from 'redux-saga/effects'
+import { call, put, takeLatest, select } from 'redux-saga/effects'
 import merge from 'loadash.merge'
-
-import { fetchTypesList, fetchPokemonsList, fetchPokemons } from './api/cachedfetch'
 
 import {
   NET_ITEMS_REQUEST,
   NET_ITEMS_SUCCESS_PAGE_FIRST,
   NET_ITEMS_SUCCESS_PAGE,
   //  NET_ITEMS_SUCCESS,
-  NET_ITEMS_FAILURE,
-
-  NET_TYPES_REQUEST,
-  NET_TYPES_SUCCESS,
-  NET_TYPES_FAILURE
+  NET_ITEMS_FAILURE
 } from './actions/ActionTypes'
 
-function * workerTypes (action) {
-  try {
-    // let url = 'https://pokeapi.co/api/v2/type?limit=100'
-    // const data = yield call(apiFetchJson, url)
-    const data = yield call(fetchTypesList)
-    const list = data.results.map(item => item.name)
-
-    yield put({
-      type: NET_TYPES_SUCCESS,
-      list: list
-    })
-  } catch (e) {
-    yield put({ type: NET_TYPES_FAILURE, error: e.message })
-  }
-}
-
-function * watcherTypes () {
-  yield takeLatest(NET_TYPES_REQUEST, workerTypes)
-}
+import { fetchPokemonsList, fetchPokemons } from './api/cachedfetch'
 
 function * workerPage (action) {
   try {
@@ -108,9 +83,4 @@ function * watcherPage () {
   yield takeLatest(NET_ITEMS_REQUEST, workerPage)
 }
 
-export default function * rootSaga () {
-  yield all([
-    watcherPage(),
-    watcherTypes()
-  ])
-}
+export default watcherPage
