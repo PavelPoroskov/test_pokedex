@@ -7,18 +7,13 @@ import TableOneRow from '../TableOneRow'
 
 import {selCurrentPageItems} from '../../selectors'
 
-// const idsToRows = (ids, obj) => ids.map(id => ({
-//   cells: ObjToRow(obj[id]),
-//   id
-// }))
-
 class TableRows extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     return (nextProps.ids !== this.props.ids)
   }
 
   render () {
-    console.log('render TableRows')
+    // console.log('render TableRows')
 
     const ids = this.props.ids
     return ids.map(id =>

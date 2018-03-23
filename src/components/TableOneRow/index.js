@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 
 import {arColumns} from '../../constants'
 
+import TypeLabel from '../TypeLabel'
+
 class TableOneRow extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     return (nextProps.id !== this.props.id)
@@ -13,12 +15,12 @@ class TableOneRow extends Component {
     let content = null
     if (ar.length === 1) {
       const tag = ar[0]
-      content = <a href={`#${tag}`} className={`type type-${tag}`}>{tag}</a>
+      content = <TypeLabel id={tag} />
     } else if (ar.length > 1) {
       let newArr = []
       let newInd = 0
       ar.forEach((tag, ind) => {
-        newArr.push(<a href={`#${tag}`} key={newInd} className={`type type-${tag}`}>{tag}</a>)
+        newArr.push(<TypeLabel id={tag} key={newInd} />)
         newInd++
         if (ind < ar.length - 1) {
           newArr.push(<br key={newInd} />)

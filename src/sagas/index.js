@@ -1,9 +1,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
-// import merge from 'loadash.merge'
 
 import { NET_ITEMS_REQUEST } from '../actions/ActionTypes'
 
-import { fetchPokemonsList, requestPokemon } from '../api/cachedfetch'
+import {
+  requestPokemonsList,
+  requestPokemon,
+  requestType } from '../api/cachedfetch'
 
 import {
   actFetchPageBatchSucces,
@@ -14,30 +16,34 @@ import {
 
 function * worker (action) {
   try {
-    // console.log('worker in')
+    console.log('worker in')
     const {resource, id} = action
 
     // step 1: take list
     let list
     if (resource === 'pokemon') {
       // console.log('worker in, resource pokemon')
-      const result = yield call(fetchPokemonsList, action)
+      const result = yield call(requestPokemonsList, action)
       list = result.result.results
     } else if (resource === 'type' && id) {
-      // list = yield call(sagaFetchPokemonsListByType, id)
+      const result = yield call(requestType, id)
+      const typeId = result.result
+      const typeObj = result.entities.types[typeId]
+      list = typeObj.pokemon
     } else {
       const msg = 'saga / worker(), unsupported resource: '
       throw new Error(msg + action.resource)
     }
 
-    // console.log('list')
-    // console.log(list)
+    console.log('list')
+    console.log(list)
 
+    // step 2: take objects
     const arPromises = list.map(name => requestPokemon(name))
 
     for (let i = 0; i < arPromises.length; i++) {
-      // const fn = x => () => x
-      // const result = yield call(fn(arPromises[i]))
+      // const fnWrap = x => () => x
+      // const result = yield call(fnWrap(arPromises[i]))
       const result = yield arPromises[i]
 
       yield put(actSetEntities({

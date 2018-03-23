@@ -2,13 +2,13 @@
 // import { normalize, schema } from 'normalizr'
 import { schema } from 'normalizr'
 
-const pokemon = new schema.Entity('pokemons', {}, {
+const pokemonRef = new schema.Entity('pokemonRefs', {}, {
   idAttribute: 'name'
 })
 
 const type = new schema.Entity('types',
   {
-    pokemon: [ pokemon ]
+    pokemon: [ pokemonRef ]
   },
   {
     idAttribute: 'name',
