@@ -116,7 +116,7 @@ td.col-types {
   line-height: 0.1;
 }
 
-div.type {
+a.type {
 
   line-height: 1;
 
@@ -135,17 +135,22 @@ div.type {
 
   background-color: lightgray;
 
-  /*display: inline-block;*/
+  display: inline-block;
+  text-decoration: none;
 }
 
-div.type-poison {
+.type:link:hover, .type:link:active, .type:link:focus {
+    opacity: 0.85;
+}
+
+.type-poison {
   background: #a040a0;
   background-image: -webkit-linear-gradient(#a040a0,#803380);
   background-image: linear-gradient(#a040a0,#803380);
   border-color: #662966
 }
 
-div.type-grass {
+.type-grass {
   background: #78c850;
   background-image: -webkit-linear-gradient(#78c850,#5ca935);
   background-image: linear-gradient(#78c850,#5ca935);

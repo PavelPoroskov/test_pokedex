@@ -1,8 +1,6 @@
 
-import { call, put, select } from 'redux-saga/effects'
-
-import { fetchPokemonsList, fetchPokemons } from '../api/cachedfetch'
-import { actSetEntities } from '../actions'
+import { call } from 'redux-saga/effects'
+import { fetchPokemonsList } from '../api/cachedfetch'
 
 export function * sagaFetchPokemonsList (opt) {
   // const {offset, limit} = opt
@@ -18,15 +16,15 @@ export function * sagaFetchPokemonsList (opt) {
   return data.result.results
 }
 
-// function * sagaFetchPokemons (arNames) {
-//   const data = yield call(fetchPokemons, arNames)
+function * sagaFetchPokemons (arNames) {
+  const data = yield call(fetchPokemons, arNames)
 
-//   yield put(actSetEntities({
-//     ...data // entities: {...}
-//   }))
+  yield put(actSetEntities({
+    ...data // entities: {...}
+  }))
 
-//   return data.result
-// }
+  return data.result
+}
 
 export function * sagaFetchPokemons (arNames) {
   const pokemons = yield select(state => state.entities.pokemons)
@@ -45,7 +43,7 @@ export function * sagaFetchPokemons (arNames) {
   return arNames
 }
 
-// export default {
-//   sagaFetchPokemonsList,
-//   sagaFetchPokemons
-// }
+export default {
+  sagaFetchPokemonsList,
+  sagaFetchPokemons
+}

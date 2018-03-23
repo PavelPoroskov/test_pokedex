@@ -24,10 +24,6 @@ function * workerTypes (action) {
   }
 }
 
-function * sagaFetchPokemonsListByType () {
-  yield takeLatest(NET_TYPES_REQUEST, workerTypes)
-}
-
 export sagaFetchTypesList
 export sagaFetchTypes
 export sagaFetchPokemonsListByType

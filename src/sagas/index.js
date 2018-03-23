@@ -3,8 +3,13 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 
 import { NET_ITEMS_REQUEST } from '../actions/ActionTypes'
 
-import { actFetchPageBatchSucces, actFetchPageFailure } from '../actions'
-import {sagaFetchPokemonsList, sagaFetchPokemons} from './pokemon'
+import { fetchPokemonsList, requestPokemon } from '../api/cachedfetch'
+
+import {
+  actFetchPageBatchSucces,
+  actFetchPageFailure,
+  actSetEntities } from '../actions'
+
 // import {sagaFetchPokemonsListByType} from './type'
 
 function * worker (action) {
@@ -16,9 +21,10 @@ function * worker (action) {
     let list
     if (resource === 'pokemon') {
       // console.log('worker in, resource pokemon')
-      list = yield call(sagaFetchPokemonsList, action)
+      const result = yield call(fetchPokemonsList, action)
+      list = result.result.results
     } else if (resource === 'type' && id) {
-      // list = yield call(sagaFetchTypes, id)
+      // list = yield call(sagaFetchPokemonsListByType, id)
     } else {
       const msg = 'saga / worker(), unsupported resource: '
       throw new Error(msg + action.resource)
@@ -26,30 +32,19 @@ function * worker (action) {
 
     // console.log('list')
     // console.log(list)
-    // step 2: take objects
-    let arBatch = []
-    for (let i = 0; i < list.length; i++) {
-      arBatch.push(list[i])
 
-      // if (arBatch.length >= 5) {
-      if (arBatch.length >= 4) {
-        let Res = yield call(sagaFetchPokemons, arBatch)
-        arBatch = []
+    const arPromises = list.map(name => requestPokemon(name))
 
-        yield put(actFetchPageBatchSucces({
-          result: Res // entities: {...}
-        }))
-      }
-    }
+    for (let i = 0; i < arPromises.length; i++) {
+      // const fn = x => () => x
+      // const result = yield call(fn(arPromises[i]))
+      const result = yield arPromises[i]
 
-    if (arBatch.length > 0) {
-      let Res = yield call(sagaFetchPokemons, arBatch)
-      // console.log('Res')
-      // console.log(Res)
-      arBatch = []
-
+      yield put(actSetEntities({
+        entities: result.entities
+      }))
       yield put(actFetchPageBatchSucces({
-        result: Res // entities: {...}
+        result: [result.result]
       }))
     }
   } catch (e) {
