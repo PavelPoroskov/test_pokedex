@@ -11,7 +11,7 @@ import currentPageItems from './currentPageItems'
 import filtersubstr from './filtersubstr'
 import filtertypes from './filtertypes'
 
-// import pageSize from './pageSize'
+import pageSize from './pageSize'
 // import currentPageNum from './currentPageNum'
 // import remoteFullSize from './remoteFullSize'
 
@@ -29,9 +29,9 @@ const rootReducer = combineReducers({
   // types, // [name, name2, ...]
 
   filtersubstr, // "qw"
-  filtertypes // , // [name3, name4, ...]
+  filtertypes, // , // [name3, name4, ...]
 
-  // pageSize,
+  pageSize
   // currentPageNum
 //  remoteFullSize
 
