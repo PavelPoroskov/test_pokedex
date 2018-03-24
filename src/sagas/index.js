@@ -14,22 +14,22 @@ import {
 
 // import {sagaFetchPokemonsListByType} from './type'
 
-function * loadObjects (list) {
-  const arPromises = list.map(name => requestPokemon(name))
+// function * loadObjects (list) {
+//   const arPromises = list.map(name => requestPokemon(name))
 
-  for (let i = 0; i < arPromises.length; i++) {
-    // const fnWrap = x => () => x
-    // const result = yield call(fnWrap(arPromises[i]))
-    const result = yield arPromises[i]
+//   for (let i = 0; i < arPromises.length; i++) {
+//     // const fnWrap = x => () => x
+//     // const result = yield call(fnWrap(arPromises[i]))
+//     const result = yield arPromises[i]
 
-    yield put(actSetEntities({
-      entities: result.entities
-    }))
-    yield put(actFetchPageBatchSucces({
-      result: [result.result]
-    }))
-  }
-}
+//     yield put(actSetEntities({
+//       entities: result.entities
+//     }))
+//     yield put(actFetchPageBatchSucces({
+//       result: [result.result]
+//     }))
+//   }
+// }
 
 // function * loadObjectsByBatch (list, batchSize) {
 //   let arBatch = []
@@ -81,8 +81,32 @@ function * worker (action) {
     console.log(list)
 
     // step 2: take objects
-    yield call(loadObjects, list)
-    // yield call(loadObjectsByBatch, list, 10)
+    // const arPromises = list.map(name => requestPokemon(name))
+
+    const storedObjs = yield select(state => state.entities.pokemons)
+    const arComands = list.map(name => {
+      if (storedObjs && storedObjs[name]) {
+        return { name: name }
+      } else {
+        return { name: name, promise: requestPokemon(name) }
+      }
+    })
+
+    for (let i = 0; i < arComands.length; i++) {
+      // const fnWrap = x => () => x
+      // const result = yield call(fnWrap(arPromises[i]))
+      const curCommand = arComands[i]
+      if (curCommand.promise) {
+        const result = yield curCommand.promise
+        yield put(actSetEntities({
+          entities: result.entities
+        }))
+      }
+
+      yield put(actFetchPageBatchSucces({
+        result: [curCommand.name]
+      }))
+    }
     //
   } catch (e) {
     console.log('catch err: ' + e.message)

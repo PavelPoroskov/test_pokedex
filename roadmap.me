@@ -19,5 +19,24 @@ new raw
 big avatar
   hover avatar
   hoven line => dedicated img abov table
-shiny
-back
+shiny new, after default_sprite
+back: hover end
+
+
+getObject(entities,id) {
+  if (entities) {
+    const storedData = entities[id]
+    if (storedData) {
+      return storedData
+    }
+  }
+
+  let cachedData = cache[id]
+  if (!cachedData) {
+    cachedData = normalize(fetch(id))
+    set_entities
+    cache[id] = cachedData
+  }
+
+  return cachedData
+}
