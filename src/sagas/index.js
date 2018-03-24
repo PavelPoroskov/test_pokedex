@@ -74,23 +74,34 @@ function * worker (action) {
       throw new Error(msg + action.resource)
     }
 
-    console.log('pageSize')
-    console.log(pageSize)
+    // console.log('pageSize')
+    // console.log(pageSize)
 
-    console.log('list')
-    console.log(list)
+    // console.log('list')
+    // console.log(list)
 
     // step 2: take objects
     // const arPromises = list.map(name => requestPokemon(name))
 
     const storedObjs = yield select(state => state.entities.pokemons)
-    const arComands = list.map(name => {
+
+    let arStored = []
+    let arComands = []
+    list.forEach(name => {
       if (storedObjs && storedObjs[name]) {
-        return { name: name }
+        arStored.push(name)
       } else {
-        return { name: name, promise: requestPokemon(name) }
+        if (arStored) {
+          arComands.push({ names: arStored.slice() })
+          arStored = []
+        }
+        arComands.push({ names: [name], promise: requestPokemon(name) })
       }
     })
+    if (arStored) {
+      arComands.push({ names: arStored.slice() })
+      arStored = []
+    }
 
     for (let i = 0; i < arComands.length; i++) {
       // const fnWrap = x => () => x
@@ -104,7 +115,7 @@ function * worker (action) {
       }
 
       yield put(actFetchPageBatchSucces({
-        result: [curCommand.name]
+        result: curCommand.names
       }))
     }
     //

@@ -16,6 +16,14 @@ class TableRows extends Component {
     // console.log('render TableRows')
 
     const ids = this.props.ids
+    if (!ids) {
+      return (
+        <tr id='Loading'>
+          <td id='Loading' className='Loading'>Loading...</td>
+        </tr>
+      )
+    }
+
     return ids.map(id =>
       <TableOneRow id={id} key={id} />)
   }
