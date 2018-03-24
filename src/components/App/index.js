@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 
+import FilterName from '../FilterName'
+import FilterType from '../FilterType'
+import TablePagination from '../TablePagination'
 import TableWithData from '../TableWithData'
 
 import './App.css'
@@ -11,9 +14,11 @@ class App extends Component {
         <div className='AppHeader'>
           <h1>Pokedex</h1>
         </div>
-        <div className='AppFilter'>
-          Filter
+        <div className='Filter'>
+          <FilterType />
+          <FilterName />
         </div>
+        <TablePagination />
         <TableWithData />
       </div>
     )

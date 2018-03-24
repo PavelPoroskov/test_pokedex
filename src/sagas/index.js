@@ -49,7 +49,7 @@ import {
 
 function * worker (action) {
   try {
-    console.log('worker in')
+    // console.log('worker in')
     const {resource, id, offcet} = action
 
     const pageSize = yield select(state => state.pageSize)
@@ -88,7 +88,7 @@ function * worker (action) {
     let arStored = []
     let arComands = []
     list.forEach(name => {
-      if (storedObjs && storedObjs[name]) {
+      if (storedObjs && (name in storedObjs)) {
         arStored.push(name)
       } else {
         if (arStored) {
@@ -114,11 +114,12 @@ function * worker (action) {
         }))
       }
 
+      const isLastBatch = (i === arComands.length - 1)
       yield put(actFetchPageBatchSucces({
-        result: curCommand.names
+        result: curCommand.names,
+        isLastBatch
       }))
     }
-    //
   } catch (e) {
     console.log('catch err: ' + e.message)
     yield put(actFetchPageFailure({ error: e.message }))

@@ -1,4 +1,9 @@
-export const initPageSize = 7
+export const initPageSize = 4
+
+export const STATUS_REQUEST = 'STATUS_REQUEST'
+export const STATUS_LOADING = 'STATUS_LOADING'
+export const STATUS_SUCCES = 'STATUS_SUCCES'
+export const STATUS_ERROR = 'STATUS_ERROR'
 
 // column
 export const arColumns = [
