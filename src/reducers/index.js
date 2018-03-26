@@ -6,14 +6,14 @@ import { combineReducers } from 'redux'
 
 import pokemons from './pokemons'
 import types from './types'
+import currentSelectedItems from './currentSelectedItems'
 import currentPageItems from './currentPageItems'
 
-import filtersubstr from './filtersubstr'
-import filtertypes from './filtertypes'
+import filter from './filter'
 
 import pageSize from './pageSize'
-// import currentPageNum from './currentPageNum'
-// import remoteFullSize from './remoteFullSize'
+import pageNum from './pageNum'
+import status from './status'
 
 const entities = combineReducers({
   pokemons,
@@ -21,21 +21,13 @@ const entities = combineReducers({
 })
 
 const rootReducer = combineReducers({
-  entities,
+  filter, // { type, substr }
+  currentSelectedItems,
   currentPageItems,
-  // itemsById, // { id1: {...}, id2: {...}, ...}
-  // items, // [id1, id2, ...]
-
-  // types, // [name, name2, ...]
-
-  filtersubstr, // "qw"
-  filtertypes, // , // [name3, name4, ...]
-
-  pageSize
-  // currentPageNum
-//  remoteFullSize
-
-  // loadedIntervals
+  entities,
+  pageSize,
+  pageNum,
+  status
 })
 
 export default rootReducer

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import {
   STATUS_REQUEST,
-  STATUS_SUCCES,
+  // STATUS_SUCCES,
   STATUS_LOADING,
   STATUS_ERROR
 } from '../../constants'
@@ -31,14 +31,14 @@ class TableRows extends Component {
         case STATUS_LOADING:
           msg = 'Loading...'
           break
-        case STATUS_SUCCES:
-          msg = 'Empty result for this filter.'
-          break
+        // case STATUS_SUCCES:
+        //   msg = 'Empty result for this filter.'
+        //   break
         case STATUS_ERROR:
           msg = 'Error loading.'
           break
         default:
-          msg = 'Choose your weapon.'
+          // msg = 'Ok.'
           break
       }
 

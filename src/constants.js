@@ -1,5 +1,6 @@
 export const initPageSize = 4
 
+export const STATUS_NOTSTATUS = 'STATUS_NOTSTATUS'
 export const STATUS_REQUEST = 'STATUS_REQUEST'
 export const STATUS_LOADING = 'STATUS_LOADING'
 export const STATUS_SUCCES = 'STATUS_SUCCES'
