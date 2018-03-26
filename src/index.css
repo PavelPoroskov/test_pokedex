@@ -28,12 +28,13 @@ tbody tr:nth-child(even) {
   background-color: #f4f4f2;
 }
 
-tbody tr {
+/*tbody tr {
   max-height: 54px; 
   min-height: 54px;
 }
-
+*/
 .avatar img {
+  min-height: 54px;
   max-height: 54px; 
   vertical-align: middle;
 }

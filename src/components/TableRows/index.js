@@ -12,8 +12,6 @@ import {
 
 import TableOneRow from '../TableOneRow'
 
-import {selCurrentPageItems, selStatus} from '../../selectors'
-
 class TableRows extends Component {
   // shouldComponentUpdate (nextProps, nextState) {
   //   return (nextProps.ids !== this.props.ids)
@@ -72,8 +70,8 @@ TableRows.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  ids: selCurrentPageItems(state),
-  status: selStatus(state)
+  ids: state.currentPageItems,
+  status: state.status
 })
 
 export default connect(mapStateToProps)(TableRows)

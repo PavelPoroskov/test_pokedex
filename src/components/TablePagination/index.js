@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import {createSelector} from 'reselect'
 
 import { actSetPage } from '../../actions'
-import {selCurrentPageNum, selTotalPages} from '../../selectors'
 
 const range = (beg, end) => {
   let arr = []
@@ -18,6 +18,8 @@ const range = (beg, end) => {
 class TablePagination extends Component {
   constructor (props) {
     super(props)
+
+    // this.state = {value: props.currentPage}
 
     this.handleClick = this.handleClick.bind(this)
     this.drawBtns = this.drawBtns.bind(this)
@@ -61,7 +63,7 @@ class TablePagination extends Component {
   render () {
     // disabled
     const {currentPage, totalPages} = this.props
-    console.log('totalPages ' + totalPages)
+    console.log('totalPages ' + totalPages + ' current ' + currentPage)
 
     let nextClass
     let nextClick
@@ -114,12 +116,12 @@ class TablePagination extends Component {
               onClick={prevClick}
             >Previous</a>
           </li>
-          {arrBtns}
           <li className={`page-item ${nextClass}`}>
             <a className='page-link' href='#'
               onClick={nextClick}
             >Next</a>
           </li>
+          {arrBtns}
         </ul>
       </nav>
     )
@@ -132,8 +134,33 @@ TablePagination.propTypes = {
   onSetPage: PropTypes.func.isRequired
 }
 
+const selPageSize = (state) => state.pageSize
+
+const selCurrentSelectedItems = (state) => state.currentSelectedItems
+
+const selTotalItems = createSelector(
+  [selCurrentSelectedItems],
+  (items) => items.length
+)
+
+const selTotalPages = createSelector(
+  [selTotalItems, selPageSize],
+  (total, pageSize) => {
+    let pages = 1
+    if (pageSize) {
+      let rest = total % pageSize
+      pages = (total - rest) / pageSize
+      pages = pages + (rest ? 1 : 0)
+    }
+
+    return pages
+  }
+)
+
+const selPageNum = (state) => state.pageNum
+
 const mapStateToProps = (state, ownProps) => ({
-  currentPage: selCurrentPageNum(state),
+  currentPage: selPageNum(state),
   totalPages: selTotalPages(state)
 })
 

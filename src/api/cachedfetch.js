@@ -8,7 +8,8 @@ const options = {
 }
 const P = new Pokedex(options)
 
-// export const requestTypesList = () => P.getTypesList()
+export const requestTypesList = ({offset, limit}) =>
+  P.getTypesList({offset, limit})
 
 export const requestType = (name) => P.getTypeByName(name)
 

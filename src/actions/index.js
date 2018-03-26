@@ -11,8 +11,8 @@ import {
   SET_PAGE_SUCCESS_BATCH,
 
   SET_ENTITIES,
-  SET_ERROR
-  //  NET_TYPES_SUCCESS,
+  SET_ERROR,
+  SET_TYPELIST
   //  NET_TYPES_FAILURE,
 } from './ActionTypes'
 
@@ -61,4 +61,9 @@ export const actSetEntities = (opt) => ({
 export const actSetError = (msg) => ({
   type: SET_ERROR,
   error: msg
+})
+
+export const actSetTypeList = (list) => ({
+  type: SET_TYPELIST,
+  items: list
 })

@@ -1,59 +1,56 @@
 import React, { Component } from 'react'
-// import PropTypes from 'prop-types'
-// import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-// import { actFetchPage } from '../../actions'
+import debounce from 'lodash.debounce'
+
+import { actSetFilter } from '../../actions'
 
 class FilterName extends Component {
-  // constructor (props) {
-  //   super(props)
+  constructor (props) {
+    super(props)
 
-  //   this.handleClick = this.handleClick.bind(this)
+    this.state = {value: ''}
+
+    this.onChange = this.onChange.bind(this)
+    this.handleClear = this.handleClear.bind(this)
+  }
+
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   return (nextProps.ids !== this.props.ids)
   // }
 
-  // // shouldComponentUpdate (nextProps, nextState) {
-  // //   return (nextProps.ids !== this.props.ids)
-  // // }
+  onChange (event) {
+    this.setState({value: event.target.value})
+    debounce(this.props.onSetFilterSubStr, 1000)(event.target.value)
+    // this.props.onSetFilterSubStr(event.target.value)
+  }
 
-  // handleClick (e) {
-  //   e.preventDefault()
-  //   this.props.onClick()
-  // }
+  handleClear (event) {
+    this.setState({value: ''})
+    this.props.onSetFilterSubStr('')
+  }
 
   render () {
-    // console.log('render TypeLabel ')
-
-    // const tag = this.props.id
     return (
       <div className='FilterName'>
-        <label>Name:</label>
-        <input type='text' id='FilterName' />
+        <label>Name: </label>
+        <input type='text' value={this.state.value}
+          onChange={this.onChange} />
+        <button className='BtnClear' onClick={this.handleClear}>X</button>
       </div>
     )
   }
 }
 
-// FilterType.propTypes = {
-//   id: PropTypes.string.isRequired,
-//   onClick: PropTypes.func.isRequired
-// }
+FilterName.propTypes = {
+  onSetFilterSubStr: PropTypes.func.isRequired
+}
 
-// const mapDispatchToProps = (dispatch, ownProps) => ({
-//   onClick: () => {
-//     dispatch(actFetchPage({
-//       resource: 'type',
-//       id: ownProps.id
-//     }))
-//   }
-// })
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  onSetFilterSubStr: (value) => {
+    dispatch(actSetFilter({substr: value}))
+  }
+})
 
-// const mapDispatchToProps = (dispatch, ownProps) => ({
-//   onClick: (id) => {
-//     dispatch(actFetchPage({
-//       resource: 'type',
-//       id: id
-//     }))
-//   }
-// })
-
-export default FilterName
+export default connect(null, mapDispatchToProps)(FilterName)

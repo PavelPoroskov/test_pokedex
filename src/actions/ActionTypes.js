@@ -23,3 +23,4 @@ export const SET_ENTITIES = 'SET_ENTITIES'
 export const SET_PAGE_SIZE = 'SET_PAGE_SIZE'
 
 export const SET_ERROR = 'SET_ERROR'
+export const SET_TYPELIST = 'SET_TYPELIST'

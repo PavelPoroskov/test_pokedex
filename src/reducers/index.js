@@ -14,6 +14,7 @@ import filter from './filter'
 import pageSize from './pageSize'
 import pageNum from './pageNum'
 import status from './status'
+import typeList from './typeList'
 
 const entities = combineReducers({
   pokemons,
@@ -21,6 +22,7 @@ const entities = combineReducers({
 })
 
 const rootReducer = combineReducers({
+  typeList,
   filter, // { type, substr }
   currentSelectedItems,
   currentPageItems,
