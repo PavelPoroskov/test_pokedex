@@ -2,15 +2,15 @@ import { call, put, takeLatest, select } from 'redux-saga/effects'
 
 import { SET_FILTER } from '../actions/ActionTypes'
 
-import {
-  requestPokemonsList,
-  requestType } from '../api/cachedfetch'
+import { requestRes } from '../api/cachedfetch'
 
 import {
   // actClearSelectedItems,
   actSetFilterEnd,
   actSetPage,
   actSetError } from '../actions'
+
+import { initPageSize } from '../constants'
 
 function * worker (action) {
   try {
@@ -20,20 +20,48 @@ function * worker (action) {
 
     // yield put(actClearSelectedItems())
 
+    let lowstr
+    if (substr) {
+      lowstr = substr.trim().toLowerCase()
+    }
+
     let list
     if (type) {
-      const result = yield call(requestType, type)
+      const result = yield call(requestRes, { resource: 'type', id: type })
       const typeId = result.result
       const typeObj = result.entities.types[typeId]
       list = typeObj.pokemon
-    } else {
-      const result = yield call(requestPokemonsList, action)
-      list = result.result.results
-    }
 
-    if (substr) {
-      const lowstr = substr.trim().toLowerCase()
-      list = list.filter(name => name.includes(lowstr))
+      if (lowstr) {
+        list = list.filter(name => name.includes(lowstr))
+      }
+    } else {
+      const arr = yield call(requestRes, {
+        resource: 'pokemon',
+        offset: 0,
+        limit: initPageSize
+      })
+      // console.log(arr)
+      list = []
+      for (let i = 0; i < arr.length; i++) {
+        let data = yield arr[i]
+        if (data.result.results) {
+          let listBatch = data.result.results
+          // console.log('listBatch')
+          // console.log(listBatch)
+          if (lowstr) {
+            listBatch = listBatch.filter(name => name.includes(lowstr))
+          }
+
+          if (listBatch) {
+            list = list.concat(listBatch)
+            // actSetFilterBatch(list))
+          }
+        }
+      }
+
+      // console.log('22')
+      // console.log(list)
     }
 
     yield put(actSetFilterEnd(list))

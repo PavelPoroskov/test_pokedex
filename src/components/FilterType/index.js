@@ -5,6 +5,8 @@ import {createSelector} from 'reselect'
 
 import { actSetFilter } from '../../actions'
 
+import './index.css'
+
 class FilterType extends Component {
   constructor (props) {
     super(props)
@@ -59,7 +61,8 @@ class FilterType extends Component {
     values = values.concat(types)
 
     const arComp = values.map(obj => (
-      <option value={obj.value} key={obj.value}>{obj.Name}</option>
+      <option value={obj.value} key={obj.value}
+        className={`type type-${obj.value}`}>{obj.Name}</option>
     ))
 
     return (

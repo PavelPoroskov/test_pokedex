@@ -118,7 +118,7 @@ td.col-types {
   line-height: 0.1;
 }
 
-a.type {
+.type {
 
   line-height: 1;
 
@@ -129,7 +129,10 @@ a.type {
   border-radius: 2px;
 
   color: white;
-  font-size: 10px;
+  
+/*  font-size: 10px;*/
+  font-size: 0.8rem;
+
   text-transform: uppercase;
   text-shadow: 1px 1px 1px #333;
 

@@ -2,7 +2,7 @@ import { put, takeLatest, select } from 'redux-saga/effects'
 
 import { SET_PAGE } from '../actions/ActionTypes'
 
-import { requestPokemon } from '../api/cachedfetch'
+import { requestRes } from '../api/cachedfetch'
 
 import {
   actSetPageBatchSucces,
@@ -30,7 +30,10 @@ function * worker (action) {
           arComands.push({ names: arStored.slice() })
           arStored = []
         }
-        arComands.push({ names: [name], promise: requestPokemon(name) })
+        arComands.push({
+          names: [name],
+          promise: requestRes({resource: 'pokemon', id: name})
+        })
       }
     })
     if (arStored) {

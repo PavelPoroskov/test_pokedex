@@ -25,6 +25,13 @@ class TablePagination extends Component {
     this.drawBtns = this.drawBtns.bind(this)
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    if (nextProps.totalPages === 0) {
+      return false
+    }
+    return true
+  }
+
   handleClick (num, e) {
     e.preventDefault()
     this.props.onSetPage(num)
@@ -44,7 +51,7 @@ class TablePagination extends Component {
     }
 
     const fnClick = (num) => {
-      if (num === '...') {
+      if (num === '...' || num === currentPage) {
         return null
       }
 
@@ -53,7 +60,7 @@ class TablePagination extends Component {
 
     return arr.map((num, ind) => (
       <li className={`page-item ${cls[num]}`} key={num}>
-        <a className='page-link' href='#'
+        <a className='page-link'
           onClick={fnClick(num)}>{num}
         </a>
       </li>
@@ -63,26 +70,38 @@ class TablePagination extends Component {
   render () {
     // disabled
     const {currentPage, totalPages} = this.props
-    console.log('totalPages ' + totalPages + ' current ' + currentPage)
+    console.log('render TablePagination ' + totalPages + ' current ' + currentPage)
 
     let nextClass
-    let nextClick
+    let nextProps
     if (totalPages <= currentPage) {
       nextClass = 'disabled'
-      nextClick = null
+      nextProps = {
+        onClick: null,
+        href: null
+      }
     } else {
       nextClass = ''
-      nextClick = this.handleClick.bind(this, currentPage + 1)
+      nextProps = {
+        onClick: this.handleClick.bind(this, currentPage + 1),
+        href: '#'
+      }
     }
 
     let prevClass
-    let prevClick
+    let prevProps
     if (currentPage <= 1) {
       prevClass = 'disabled'
-      prevClick = null
+      prevProps = {
+        onClick: null,
+        href: null
+      }
     } else {
       prevClass = ''
-      prevClick = this.handleClick.bind(this, currentPage - 1)
+      prevProps = {
+        onClick: this.handleClick.bind(this, currentPage - 1),
+        href: '#'
+      }
     }
 
     const drawButtons = 5
@@ -112,14 +131,10 @@ class TablePagination extends Component {
       <nav >
         <ul className='pagination'>
           <li className={`page-item ${prevClass}`}>
-            <a className='page-link' href='#'
-              onClick={prevClick}
-            >Previous</a>
+            <a className='page-link' {...prevProps}>Previous</a>
           </li>
           <li className={`page-item ${nextClass}`}>
-            <a className='page-link' href='#'
-              onClick={nextClick}
-            >Next</a>
+            <a className='page-link' {...nextProps}>Next</a>
           </li>
           {arrBtns}
         </ul>
@@ -166,6 +181,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSetPage: (pageNum) => {
+    // console.log(pageNum)
     dispatch(actSetPage(pageNum))
   }
 })
