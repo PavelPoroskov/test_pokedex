@@ -1,39 +1,67 @@
-// import {Pokedex} from './pokeapi-js-wrapper'
-import 'whatwg-fetch'
+// import 'whatwg-fetch'
+import axios from 'axios'
+
 import localForage from 'localforage'
 
 import { normalize } from 'normalizr'
 import schemas from './schemas'
 
-const CACHE_PREFIX = 'pokedex-test-'
+export const cachePageSize = 20
 
-const urlApi = 'https://pokeapi.co/api/v2/'
-const cachePageSize = 20
+const CACHE_PREFIX = 'pokedex-test-'
+// const urlApi = 'https://pokeapi.co/api/v2/'
 const msTimeout = 20 * 1000 // 20 sek
-const secTimeout = msTimeout / 1000
+// const secTimeout = msTimeout / 1000
+
+// const dFrom = 1522149358224
+// const msSince = () =>
+//   Date.now() - dFrom
 
 function apiFetch (url, schema) {
-  return window.fetch(`${urlApi}${url}`)
-    .then(response => response.json())
-    .then(json => {
-      let data = json
-      if (schema) {
-        data = normalize(data, schema)
-      }
+  // return Promise.race([
+  //   //
+  //   window.fetch(`${urlApi}${url}`)
+  //     .then(response => response.json())
+  //     .then(json => {
+  //       // console.log('received ' + url + ' ' + msSince())
+  //       let data = json
+  //       if (schema) {
+  //         data = normalize(data, schema)
+  //       }
 
-      localForage.setItem(`${CACHE_PREFIX}${url}`, data)
+  //       localForage.setItem(`${CACHE_PREFIX}${url}`, data)
 
-      return data
-    })
-}
+  //       return data
+  //     }),
+  //   //
+  //   new Promise((resolve, reject) => {
+  //     setTimeout(reject, msTimeout,
+  //       'Timeout error, ' + secTimeout + ' sek. ' + url)
+  //   })
+  // ])
 
-function apiTimeouted (url, schema) {
-  var timeoutErr = new Promise((resolve, reject) => {
-    setTimeout(reject, msTimeout,
-      'Timeout error, ' + secTimeout + ' sek. ' + url)
+  return new Promise((resolve, reject) => {
+    let options = {
+      baseURL: 'https://pokeapi.co/',
+      timeout: msTimeout
+    }
+    axios.get(`/api/v2/${url}`, options)
+      .then(response => {
+        // if there was an error
+        if (response.status >= 400) {
+          reject(response)
+        } else {
+          let data = response.data
+          if (schema) {
+            data = normalize(data, schema)
+          }
+          localForage.setItem(`${CACHE_PREFIX}${url}`, data)
+
+          resolve(data)
+        }
+      })
+      .catch(err => { reject(err) })
   })
-
-  return Promise.race([apiFetch(url, schema), timeoutErr])
 }
 
 function apiCached (url, schema) {
@@ -43,7 +71,7 @@ function apiCached (url, schema) {
         localForage.getItem(`${CACHE_PREFIX}${url}`)
           .then(value => {
             if (value === null) {
-              apiTimeouted(url, schema)
+              apiFetch(url, schema)
                 .then(res => { resolve(res) })
                 .catch(err => { reject(err) })
             } else {
@@ -51,13 +79,13 @@ function apiCached (url, schema) {
             }
           })
           .catch(() => {
-            apiTimeouted(url, schema)
+            apiFetch(url, schema)
               .then(res => { resolve(res) })
               .catch(err => { reject(err) })
           })
       })
       .catch(() => {
-        apiTimeouted(url, schema)
+        apiFetch(url, schema)
           .then(res => { resolve(res) })
           .catch(err => { reject(err) })
       })
@@ -107,10 +135,7 @@ export function requestRes ({resource, id, offset, limit}) {
 
     let schema = schemas[`${resource}List`]
 
-    let curPageBeg = pagedBeg
-    let curOffset, url
-
-    const fnSlice = (result, curPageBeg) => {
+    const fnSlice = (data, curPageBeg) => {
       const curPageEnd = curPageBeg + cachePageSize - 1
       let todoSlice = false
       let beg0 = 0
@@ -123,20 +148,38 @@ export function requestRes ({resource, id, offset, limit}) {
         end0 = reqestEnd - curPageBeg
         todoSlice = true
       }
+      // console.log('curPageBeg ' + curPageBeg)
+      // console.log('curPageEnd ' + curPageEnd)
+      // console.log('todoSlice ' + todoSlice)
       if (!todoSlice) {
-        return result
+        return data
       }
-      return result.slice(beg0, end0 + 1)
+      // return result.slice(beg0, end0 + 1)
+      const {result, ...restNorm} = data
+      const {results, ...restResult} = result
+      const newResult = {
+        results: results.slice(beg0, end0 + 1),
+        ...restResult
+      }
+
+      return {
+        result: newResult,
+        ...restNorm
+      }
     }
 
+    const fnCurry = (_curPageBeg) => (result) => fnSlice(result, _curPageBeg)
+
+    let curPageBeg = pagedBeg
+    let curOffset, url
     // console.log(' curPageBeg ' + curPageBeg + ' ')
     // console.log(' pagedEnd ' + pagedEnd + ' ')
     while (curPageBeg < pagedEnd) {
       // console.log(' beg ' + curPageBeg + ' ')
       curOffset = curPageBeg - 1
       url = `${urlRes}?offset=${curOffset}&limit=${cachePageSize}`
-      // eslint-disable-next-line
-      let promiseRes = apiCached(url, schema).then(result => fnSlice(result, curPageBeg))
+      // let promiseRes = apiCached(url, schema).then(result => fnSlice(result, curPageBeg))
+      let promiseRes = apiCached(url, schema).then(fnCurry(curPageBeg))
 
       arrProm.push(promiseRes)
 

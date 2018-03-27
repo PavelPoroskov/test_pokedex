@@ -9,6 +9,10 @@ import {
   actSetEntities,
   actSetError } from '../actions'
 
+// const dFrom = 1522149358224
+// const msSince = () =>
+//   Date.now() - dFrom
+
 function * worker (action) {
   try {
     const pageSize = yield select(state => state.pageSize)
@@ -30,6 +34,7 @@ function * worker (action) {
           arComands.push({ names: arStored.slice() })
           arStored = []
         }
+        // console.log('start ' + name + ' ' + msSince())
         arComands.push({
           names: [name],
           promise: requestRes({resource: 'pokemon', id: name})
@@ -50,6 +55,7 @@ function * worker (action) {
         yield put(actSetEntities({
           entities: result.entities
         }))
+        // console.log('output ' + curCommand.names[0] + ' ' + msSince())
       }
 
       const isLastBatch = (i === arComands.length - 1)

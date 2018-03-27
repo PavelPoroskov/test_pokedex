@@ -14,7 +14,7 @@ import reducer from './reducers'
 
 import App from './components/App'
 
-import './index.css'
+import './styles/css/index.css'
 
 const sagaMiddleware = createSagaMiddleware()
 

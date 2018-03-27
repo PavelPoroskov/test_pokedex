@@ -2,9 +2,9 @@ import {
   SET_PAGE_SIZE
 } from '../actions/ActionTypes'
 
-import { initPageSize } from '../constants'
+import { initUIPageSize } from '../constants'
 
-const pageSize = (state = initPageSize, action) => {
+const pageSize = (state = initUIPageSize, action) => {
   switch (action.type) {
     case SET_PAGE_SIZE:
       return action.pageSize

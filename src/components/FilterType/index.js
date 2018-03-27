@@ -5,7 +5,7 @@ import {createSelector} from 'reselect'
 
 import { actSetFilter } from '../../actions'
 
-import './index.css'
+// import './index.css'
 
 class FilterType extends Component {
   constructor (props) {
@@ -68,7 +68,9 @@ class FilterType extends Component {
     return (
       <div className='FilterType'>
         <label>Type: </label>
-        <select value={this.state.value} onChange={this.handleSelect}>
+        <select value={this.state.value}
+          className={`type type-${this.state.value}`}
+          onChange={this.handleSelect}>
           {arComp}
         </select>
         <button className='BtnClear' onClick={this.handleClear}>X</button>

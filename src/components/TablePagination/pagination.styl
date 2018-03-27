@@ -1,0 +1,50 @@
+.pagination 
+/*  display: flex
+  line-height: 2*/
+  display: flex
+  /*padding-left: 0*/
+  list-style: none
+  /*border-radius: .25rem*/
+
+
+.page-item 
+/*  min-width: 1.8em
+  border: 1px solid gray
+  border-radius: 3px*/
+
+  display: block
+  list-style: none
+/*  padding: 0 4px
+  margin: 0 2px*/
+
+.page-item:first-child > a 
+  border-radius: 4px 0 0 4px
+
+
+.page-item:last-child > a 
+  border-radius: 0 4px 4px 0
+
+
+.page-link:not(:disabled) 
+  cursor: pointer
+
+.page-link 
+  display: block
+  padding: .5rem .8rem
+  margin-left: -1px
+  line-height: 1.25
+  text-decoration: none
+  color: #007bff
+  background-color: #fff
+  border: 1px solid #dee2e6  
+  &:hover 
+    color: #0056b3
+    background-color: color-hover
+    border-color: #dee2e6
+
+.page-item.active .page-link 
+  z-index: 1
+  color: #fff
+  background-color: #007bff
+  border-color: #007bff
+/*  border: 2px solid #007bff  */

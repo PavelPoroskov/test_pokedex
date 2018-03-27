@@ -2,7 +2,7 @@ import { call, put, takeLatest, select } from 'redux-saga/effects'
 
 import { SET_FILTER } from '../actions/ActionTypes'
 
-import { requestRes } from '../api/cachedfetch'
+import { requestRes, cachePageSize } from '../api/cachedfetch'
 
 import {
   // actClearSelectedItems,
@@ -10,7 +10,7 @@ import {
   actSetPage,
   actSetError } from '../actions'
 
-import { initPageSize } from '../constants'
+// import { requestBatchSize } from '../constants'
 
 function * worker (action) {
   try {
@@ -39,7 +39,7 @@ function * worker (action) {
       const arr = yield call(requestRes, {
         resource: 'pokemon',
         offset: 0,
-        limit: initPageSize
+        limit: cachePageSize
       })
       // console.log(arr)
       list = []
@@ -47,8 +47,8 @@ function * worker (action) {
         let data = yield arr[i]
         if (data.result.results) {
           let listBatch = data.result.results
-          // console.log('listBatch')
-          // console.log(listBatch)
+          console.log('listBatch')
+          console.log(listBatch)
           if (lowstr) {
             listBatch = listBatch.filter(name => name.includes(lowstr))
           }
