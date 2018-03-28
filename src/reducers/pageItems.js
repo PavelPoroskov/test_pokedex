@@ -3,15 +3,15 @@ import {
   SET_PAGE_SUCCESS_BATCH
 } from '../actions/ActionTypes'
 
-const currentPageItems = (state = [], action) => {
+const pageItems = (state = [], action) => {
   switch (action.type) {
     case SET_PAGE:
       return []
     case SET_PAGE_SUCCESS_BATCH:
-      return [...state, ...action.result]
+      return [...state, ...action.items]
     default:
       return state
   }
 }
 
-export default currentPageItems
+export default pageItems
