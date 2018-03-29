@@ -22,25 +22,29 @@ class TablePagination extends Component {
     // this.state = {value: props.currentPage}
 
     this.handleClick = this.handleClick.bind(this)
-    this.drawBtns = this.drawBtns.bind(this)
+    this.drawArrayBtns = this.drawArrayBtns.bind(this)
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (nextProps.totalPages === 0) {
-      return false
-    }
-    return true
-  }
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   if (nextProps.totalPages === 0) {
+  //     return false
+  //   }
+  //   return true
+  // }
 
   handleClick (num, e) {
     e.preventDefault()
     this.props.onSetPage(num)
   }
 
-  drawBtns (arrBeg, arrEnd) {
+  drawArrayBtns (arrBeg, arrMid, arrEnd) {
     let arr = arrBeg
+    if (arrMid) {
+      // arr.push('...')
+      arr = arr.concat(arrMid)
+    }
     if (arrEnd) {
-      arr.push('...')
+      // arr.push('...')
       arr = arr.concat(arrEnd)
     }
 
@@ -69,73 +73,81 @@ class TablePagination extends Component {
 
   render () {
     // disabled
-    const {currentPage, totalPages} = this.props
+    const {currentPage, totalPages, selectionIsFull} = this.props
     console.log('render TablePagination ' + totalPages + ' current ' + currentPage)
 
-    let nextClass
-    let nextProps
-    if (totalPages <= currentPage) {
-      nextClass = 'disabled'
-      nextProps = {
-        onClick: null,
-        href: null
-      }
+    let nextBtn
+    if (currentPage < totalPages || !selectionIsFull) {
+      nextBtn = (
+        <li className='page-item'>
+          <a className='page-link' href='#'
+            onClick={this.handleClick.bind(this, currentPage + 1)}
+          >Next</a>
+        </li>
+      )
     } else {
-      nextClass = ''
-      nextProps = {
-        onClick: this.handleClick.bind(this, currentPage + 1),
-        href: '#'
-      }
+      nextBtn = <li className='page-item disabled'>Next</li>
     }
 
-    let prevClass
-    let prevProps
+    let prevBtn
     if (currentPage <= 1) {
-      prevClass = 'disabled'
-      prevProps = {
-        onClick: null,
-        href: null
-      }
+      prevBtn = <li className='page-item disabled'>Previous</li>
     } else {
-      prevClass = ''
-      prevProps = {
-        onClick: this.handleClick.bind(this, currentPage - 1),
-        href: '#'
-      }
+      prevBtn = (
+        <li className='page-item'>
+          <a className='page-link' href='#'
+            onClick={this.handleClick.bind(this, currentPage - 1)}
+          >Previous</a>
+        </li>
+      )
     }
 
     const drawButtons = 5
+
     let arrBtns
-    if (totalPages <= drawButtons) {
-      // 1, 2, 3, 4, 5
-      arrBtns = this.drawBtns(range(1, totalPages))
-    } else {
-      const avalableBtn = drawButtons - 2 // (last/first)Btn, ...Btn
-      if (totalPages - avalableBtn + 1 <= currentPage) {
-        // 1, ..., 4, 5, 6
-        arrBtns = this.drawBtns([1], range(totalPages - avalableBtn + 1, totalPages))
+    if (selectionIsFull) {
+      //
+      if (totalPages <= drawButtons) {
+        // 1, 2, 3, 4, 5
+        arrBtns = this.drawArrayBtns(range(1, totalPages))
       } else {
-        // if (currentPage <= avalableBtn) {
-        // // 1, 2, 3, ..., 6
+        const avalableBtn = drawButtons - 2 // (last/first)Btn, ...Btn
+        if (totalPages - avalableBtn + 1 <= currentPage) {
+          // 1, ..., 4, 5, 6
+          arrBtns = this.drawArrayBtns([1], ['...'], range(totalPages - avalableBtn + 1, totalPages))
+        } else {
+          // if (currentPage <= avalableBtn) {
+          // // 1, 2, 3, ..., 6
 
-        // 4, 5, 6, ... 10
-        const rest = currentPage % avalableBtn
-        const steps = rest || avalableBtn
-        const beg = currentPage - steps + 1
+          // 4, 5, 6, ... 10
+          const rest = currentPage % avalableBtn
+          const steps = rest || avalableBtn
+          const beg = currentPage - steps + 1
 
-        arrBtns = this.drawBtns(range(beg, beg + avalableBtn - 1), [totalPages])
+          arrBtns = this.drawArrayBtns(range(beg, beg + avalableBtn - 1), ['...'], [totalPages])
+        }
+      }
+    } else { // not selectionIsFull
+      //
+      if (totalPages < drawButtons) {
+        // 1, 2, 3, 4, 5
+        arrBtns = this.drawArrayBtns(range(1, totalPages), ['...'])
+      } else {
+        const avalableBtn = drawButtons - 1 // ...Btn
+        const begBtn = currentPage - avalableBtn + 1
+        if (begBtn > 0) {
+          arrBtns = this.drawArrayBtns(range(begBtn, currentPage), ['...'])
+        } else {
+          arrBtns = this.drawArrayBtns(range(1, avalableBtn), ['...'])
+        }
       }
     }
 
     return (
       <nav >
         <ul className='pagination'>
-          <li className={`page-item ${prevClass}`}>
-            <a className='page-link' {...prevProps}>Previous</a>
-          </li>
-          <li className={`page-item ${nextClass}`}>
-            <a className='page-link' {...nextProps}>Next</a>
-          </li>
+          {prevBtn}
+          {nextBtn}
           {arrBtns}
         </ul>
       </nav>
@@ -150,23 +162,15 @@ TablePagination.propTypes = {
 }
 
 const selPageSize = (state) => state.pageSize
-
-const selCurrentSelectedItems = (state) => state.currentSelectedItems
-
-const selTotalItems = createSelector(
-  [selCurrentSelectedItems],
-  (items) => items.length
-)
+const selSelectionLength = (state) => state.selectionParams.fullLength
+const selSelectionIsFull = (state) => state.selectionParams.isFull
 
 const selTotalPages = createSelector(
-  [selTotalItems, selPageSize],
+  [selSelectionLength, selPageSize],
   (total, pageSize) => {
-    let pages = 1
-    if (pageSize) {
-      let rest = total % pageSize
-      pages = (total - rest) / pageSize
-      pages = pages + (rest ? 1 : 0)
-    }
+    let rest = total % pageSize
+    let pages = (total - rest) / pageSize
+    pages = pages + (rest ? 1 : 0)
 
     return pages
   }
@@ -176,7 +180,8 @@ const selPageNum = (state) => state.pageNum
 
 const mapStateToProps = (state, ownProps) => ({
   currentPage: selPageNum(state),
-  totalPages: selTotalPages(state)
+  totalPages: selTotalPages(state),
+  selectionIsFull: selSelectionIsFull(state)
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

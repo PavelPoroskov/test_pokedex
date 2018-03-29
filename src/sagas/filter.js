@@ -1,80 +1,156 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects'
+import { call, put, take, takeLatest, select } from 'redux-saga/effects'
 
-import { SET_FILTER } from '../actions/ActionTypes'
+import { CHANGE_FILTER, SELECTION_CONTINUE } from '../actions/ActionTypes'
 
 import { requestRes, cachePageSize } from '../api/cachedfetch'
 
 import {
   // actClearSelectedItems,
-  actSetFilterEnd,
+  actSelectionSuccesBatch,
   actSetPage,
   actSetError } from '../actions'
 
-// import { requestBatchSize } from '../constants'
+function * loadEnough ({offset, substr, haveLength, toLength}) {
+  let isFull = false
+  // let list = []
+  let toSetPage1 = (offset === 0)
+
+  let newHaveLength = haveLength
+
+  // if (toSetPage1) {
+  //   toSetPage1 = false
+  //   yield put(actSetPage(1))
+  // }
+
+  while (true) {
+    const resultNorm = yield call(requestRes, {
+      resource: 'pokemon',
+      offset
+    })
+    const result = resultNorm.result
+    const list = result.results
+    let listBatch = list
+    if (substr) {
+      listBatch = listBatch.filter(name => name.includes(substr))
+    }
+
+    isFull = !result.next
+
+    if (listBatch) {
+      newHaveLength = newHaveLength + listBatch.length
+      yield put(actSelectionSuccesBatch({
+        fullLength: newHaveLength,
+        items: listBatch,
+        isFull
+      }))
+      if (toSetPage1) {
+        toSetPage1 = false
+        yield put(actSetPage(1))
+      }
+    }
+
+    offset = offset + cachePageSize
+    // offset = offset + list.length
+
+    if (toLength <= newHaveLength || isFull) {
+      break
+    }
+  }
+
+  return {
+    offset,
+    isFull,
+    haveLength: newHaveLength
+  }
+}
+
+// step 1: load enough items
+// step 2: add items on event 'SELECTION_CONTINUE'
+function * loadPokemonList (substr) {
+  //
+  // step 1: load enough items
+  let offset = 0
+
+  const pageUISize = yield select(state => state.pageSize)
+  let haveLength = 0
+  let toLength = pageUISize + 1
+
+  const {
+    offset: newOffset,
+    isFull,
+    haveLength: newHaveLength
+  } = yield call(loadEnough, {offset, substr, haveLength, toLength})
+  offset = newOffset
+  haveLength = newHaveLength
+  if (isFull) {
+    return
+  }
+
+  //
+  // step 2: add items on event 'SELECTION_CONTINUE'
+  while (true) {
+    const { needEnd0 } = yield take(SELECTION_CONTINUE)
+    // console.log('continue ')
+    // if (fromLength <= haveLength) {
+    //   // [fromLength-1, min(newToLength,haveLength)-1]
+    //   // yield put(actPageUpdate(pageNum))
+    // }
+    const toEnd0 = needEnd0 + 1
+    toLength = toEnd0 + 1
+    if (toLength <= haveLength) {
+      continue
+    }
+
+    const {
+      offset: newOffset,
+      isFull,
+      haveLength: newHaveLength
+    } = yield call(loadEnough, {offset, substr, haveLength, toLength})
+    offset = newOffset
+    haveLength = newHaveLength
+
+    if (isFull) {
+      break
+    }
+  }
+  //
+}
 
 function * worker (action) {
   try {
-    // console.log('worker in')
-    // const {type, substr} = action
     const {type, substr} = yield select(state => state.filter)
 
-    // yield put(actClearSelectedItems())
-
-    let lowstr
-    if (substr) {
-      lowstr = substr.trim().toLowerCase()
-    }
-
-    let list
     if (type) {
       const result = yield call(requestRes, { resource: 'type', id: type })
       const typeId = result.result
       const typeObj = result.entities.types[typeId]
-      list = typeObj.pokemon
+      let list = typeObj.pokemon
 
-      if (lowstr) {
-        list = list.filter(name => name.includes(lowstr))
+      if (substr) {
+        list = list.filter(name => name.includes(substr))
       }
+      console.log('type empty')
+      console.log(list)
+      console.log(list.length)
+      yield put(actSelectionSuccesBatch({
+        items: list,
+        isFull: true,
+        fullLength: list.length
+      }))
+      yield put(actSetPage(1))
+      //
     } else {
-      const arr = yield call(requestRes, {
-        resource: 'pokemon',
-        offset: 0,
-        limit: cachePageSize
-      })
-      // console.log(arr)
-      list = []
-      for (let i = 0; i < arr.length; i++) {
-        let data = yield arr[i]
-        if (data.result.results) {
-          let listBatch = data.result.results
-          console.log('listBatch')
-          console.log(listBatch)
-          if (lowstr) {
-            listBatch = listBatch.filter(name => name.includes(lowstr))
-          }
-
-          if (listBatch) {
-            list = list.concat(listBatch)
-            // actSetFilterBatch(list))
-          }
-        }
-      }
-
-      // console.log('22')
-      // console.log(list)
+      //
+      yield call(loadPokemonList, substr)
     }
-
-    yield put(actSetFilterEnd(list))
-    yield put(actSetPage(1))
-    //
   } catch (e) {
-    const msg = 'saga/page catch err: ' + e.message
+    const msg = 'saga/filter catch err: ' + e.message
     yield put(actSetError(msg))
   }
 }
 
 function * watcher () {
-  yield takeLatest(SET_FILTER, worker)
+  yield takeLatest(CHANGE_FILTER, worker)
 }
 
 export default watcher

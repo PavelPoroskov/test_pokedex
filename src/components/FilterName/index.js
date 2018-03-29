@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import debounce from 'lodash.debounce'
 
-import { actSetFilter } from '../../actions'
+import { actChangeFilter } from '../../actions'
 
 class FilterName extends Component {
   constructor (props) {
@@ -16,10 +16,6 @@ class FilterName extends Component {
     this.handleClear = this.handleClear.bind(this)
   }
 
-  // shouldComponentUpdate (nextProps, nextState) {
-  //   return (nextProps.ids !== this.props.ids)
-  // }
-
   onChange (event) {
     this.setState({value: event.target.value})
     debounce(this.props.onSetFilterSubStr, 1000)(event.target.value)
@@ -27,6 +23,9 @@ class FilterName extends Component {
   }
 
   handleClear (event) {
+    if (this.state.value === '') {
+      return
+    }
     this.setState({value: ''})
     this.props.onSetFilterSubStr('')
   }
@@ -49,7 +48,7 @@ FilterName.propTypes = {
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSetFilterSubStr: (value) => {
-    dispatch(actSetFilter({substr: value}))
+    dispatch(actChangeFilter({substr: value.trim().toLowerCase()}))
   }
 })
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { actSetFilter } from '../../actions'
+import { actChangeFilter } from '../../actions'
 
 class TypeLabel extends Component {
   constructor (props) {
@@ -37,19 +37,10 @@ TypeLabel.propTypes = {
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onClick: () => {
-    dispatch(actSetFilter({
+    dispatch(actChangeFilter({
       type: ownProps.id
     }))
   }
 })
-
-// const mapDispatchToProps = (dispatch, ownProps) => ({
-//   onClick: (id) => {
-//     dispatch(actFetchPage({
-//       resource: 'type',
-//       id: id
-//     }))
-//   }
-// })
 
 export default connect(null, mapDispatchToProps)(TypeLabel)

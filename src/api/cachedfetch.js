@@ -10,7 +10,7 @@ export const cachePageSize = 20
 
 const CACHE_PREFIX = 'pokedex-test-'
 // const urlApi = 'https://pokeapi.co/api/v2/'
-const msTimeout = 20 * 1000 // 20 sek
+const msTimeout = 40 * 1000 // 20 sek
 // const secTimeout = msTimeout / 1000
 
 // const dFrom = 1522149358224
@@ -92,8 +92,8 @@ function apiCached (url, schema) {
   })
 }
 
-// return array of promeses
-export function requestRes ({resource, id, offset, limit}) {
+// return promize or array of promeses
+export function requestResExt ({resource, id, offset, limit}) {
   let arrProm = []
   if (!resource) {
     return arrProm
@@ -135,27 +135,27 @@ export function requestRes ({resource, id, offset, limit}) {
 
     let schema = schemas[`${resource}List`]
 
-    const fnSlice = (data, curPageBeg) => {
-      const curPageEnd = curPageBeg + cachePageSize - 1
-      let todoSlice = false
-      let beg0 = 0
-      if (curPageBeg <= reqestBeg && reqestBeg <= curPageEnd) {
-        beg0 = reqestBeg - curPageBeg
-        todoSlice = true
+    if (reqestBeg === pagedBeg && reqestEnd === pagedEnd) {
+      if (limit === cachePageSize) {
+        const curOffset = pagedBeg - 1
+        const url = `${urlRes}?offset=${curOffset}&limit=${cachePageSize}`
+        return apiCached(url, schema)
       }
-      let end0 = cachePageSize - 1
-      if (curPageBeg <= reqestEnd && reqestEnd <= curPageEnd) {
-        end0 = reqestEnd - curPageBeg
-        todoSlice = true
+
+      let curPageBeg = pagedBeg
+      let curOffset, url
+      while (curPageBeg < pagedEnd) {
+        curOffset = curPageBeg - 1
+        url = `${urlRes}?offset=${curOffset}&limit=${cachePageSize}`
+        arrProm.push(apiCached(url, schema))
+
+        curPageBeg = curPageBeg + cachePageSize
       }
-      // console.log('curPageBeg ' + curPageBeg)
-      // console.log('curPageEnd ' + curPageEnd)
-      // console.log('todoSlice ' + todoSlice)
-      if (!todoSlice) {
-        return data
-      }
-      // return result.slice(beg0, end0 + 1)
-      const {result, ...restNorm} = data
+      return arrProm
+    }
+
+    const fnSlice = (beg0, end0) => (resultNorm) => {
+      const {result, ...restNorm} = resultNorm
       const {results, ...restResult} = result
       const newResult = {
         results: results.slice(beg0, end0 + 1),
@@ -168,18 +168,33 @@ export function requestRes ({resource, id, offset, limit}) {
       }
     }
 
-    const fnCurry = (_curPageBeg) => (result) => fnSlice(result, _curPageBeg)
-
     let curPageBeg = pagedBeg
     let curOffset, url
-    // console.log(' curPageBeg ' + curPageBeg + ' ')
-    // console.log(' pagedEnd ' + pagedEnd + ' ')
     while (curPageBeg < pagedEnd) {
       // console.log(' beg ' + curPageBeg + ' ')
       curOffset = curPageBeg - 1
       url = `${urlRes}?offset=${curOffset}&limit=${cachePageSize}`
       // let promiseRes = apiCached(url, schema).then(result => fnSlice(result, curPageBeg))
-      let promiseRes = apiCached(url, schema).then(fnCurry(curPageBeg))
+
+      const curPageEnd = curPageBeg + cachePageSize - 1
+      let todoSlice = false
+      let beg0 = 0
+      if (curPageBeg <= reqestBeg && reqestBeg <= curPageEnd) {
+        beg0 = reqestBeg - curPageBeg
+        todoSlice = true
+      }
+      let end0 = cachePageSize - 1
+      if (curPageBeg <= reqestEnd && reqestEnd <= curPageEnd) {
+        end0 = reqestEnd - curPageBeg
+        todoSlice = true
+      }
+
+      let promiseRes
+      if (todoSlice) {
+        promiseRes = apiCached(url, schema).then(fnSlice(beg0, end0))
+      } else {
+        promiseRes = apiCached(url, schema)
+      }
 
       arrProm.push(promiseRes)
 
@@ -188,4 +203,31 @@ export function requestRes ({resource, id, offset, limit}) {
   }
 
   return arrProm
+}
+
+// return one promese
+export function requestRes ({resource, id, offset}) {
+  if (!resource) {
+    return
+  }
+
+  // if (!id || (!offset && !limit)) {
+  if (!id && offset === undefined) {
+    return
+  }
+
+  // const urlRes = `${urlApi}${resource}/`
+  const urlRes = `${resource}/`
+
+  if (id) {
+    let schema = schemas[resource]
+    return apiCached(`${urlRes}${id}/`, schema)
+  } else {
+    if (offset % cachePageSize) {
+      return
+    }
+    let schema = schemas[`${resource}List`]
+    const url = `${urlRes}?offset=${offset}&limit=${cachePageSize}`
+    return apiCached(url, schema)
+  }
 }

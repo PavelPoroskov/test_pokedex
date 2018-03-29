@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {createSelector} from 'reselect'
 
-import { actSetFilter } from '../../actions'
+import { actChangeFilter } from '../../actions'
 
 // import './index.css'
 
@@ -48,6 +48,9 @@ class FilterType extends Component {
   }
 
   handleClear (event) {
+    if (this.state.value === '') {
+      return
+    }
     this.setState({value: ''})
     this.props.onSetFilterType('')
   }
@@ -109,7 +112,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSetFilterType: (value) => {
-    dispatch(actSetFilter({type: value}))
+    dispatch(actChangeFilter({type: value}))
   }
 })
 

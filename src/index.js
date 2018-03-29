@@ -8,7 +8,7 @@ import createSagaMiddleware from 'redux-saga'
 // import { initPageSize } from './constants'
 // import { actSetPageSize, actFetchPokemons } from './actions'
 
-import { actSetFilter } from './actions'
+import {actChangeFilter} from './actions'
 import rootSaga from './sagas'
 import reducer from './reducers'
 
@@ -31,7 +31,7 @@ sagaMiddleware.run(rootSaga)
 //   offcet: 0,
 //   limit: initPageSize
 // }))
-store.dispatch(actSetFilter())
+store.dispatch(actChangeFilter())
 
 ReactDOM.render(
   <Provider store={store}>

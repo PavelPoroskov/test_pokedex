@@ -1,5 +1,5 @@
 import {
-  CHANGE_FILTER,
+  // CHANGE_FILTER,
   SET_PAGE,
   // NET_ITEMS_SUCCESS_BATCH,
   // NET_ITEMS_SUCCESS_END,
@@ -16,8 +16,8 @@ import {
 
 const status = (state = STATUS_NOSTATUS, action) => {
   switch (action.type) {
-    case CHANGE_FILTER:
-      return STATUS_REQUEST
+    // case CHANGE_FILTER:
+    //   return STATUS_REQUEST
     // case NET_ITEMS_SUCCESS_BATCH:
     //   return action.isLastBatch ? STATUS_SUCCES : STATUS_LOADING
     // case NET_ITEMS_SUCCESS_END:

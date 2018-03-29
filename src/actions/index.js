@@ -1,42 +1,35 @@
 import {
-  // NET_ITEMS_REQUEST,
-  //  NET_ITEMS_SUCCESS,
-  // NET_ITEMS_FAILURE,
+  CHANGE_FILTER,
 
-  // SET_PAGE_SIZE,
-  SET_FILTER,
-  SET_FILTER_END,
+  SELECTION_CONTINUE,
+  SELECTION_SUCCES_BATCH,
 
   SET_PAGE,
   SET_PAGE_SUCCESS_BATCH,
 
+  SET_TYPELIST,
+
   SET_ENTITIES,
-  SET_ERROR,
-  SET_TYPELIST
-  //  NET_TYPES_FAILURE,
+  SET_ERROR
 } from './ActionTypes'
 
-// import { initPageSize } from './constants'
-
-// export const actSetPageSize = (pageSize) => ({
-//   type: SET_PAGE_SIZE,
-//   pageSize
-// })
-
-// opt = {resource, offset, limit, id}
-// export const actFetchPage = (opt) => ({
-//   type: NET_ITEMS_REQUEST,
-//   ...opt
-// })
-
-export const actSetFilter = (opt) => ({
-  type: SET_FILTER,
+export const actChangeFilter = (opt) => ({
+  type: CHANGE_FILTER,
   filter: opt
 })
 
-export const actSetFilterEnd = (list) => ({
-  type: SET_FILTER_END,
-  items: list
+export const actSelectionSuccesBatch = ({items, isFull, fullLength}) => {
+  return {
+    type: SELECTION_SUCCES_BATCH,
+    items,
+    fullLength,
+    isFull
+  }
+}
+
+export const actSelectionContinueTo = (needEnd0) => ({
+  type: SELECTION_CONTINUE,
+  needEnd0
 })
 
 export const actSetPage = (pageNum) => ({
@@ -44,14 +37,19 @@ export const actSetPage = (pageNum) => ({
   pageNum
 })
 
-export const actSetPageBatchSucces = (opt) => ({
-  type: SET_PAGE_SUCCESS_BATCH,
-  ...opt
+export const actSetPageSuccesBatch = (items) => {
+  // console.log('actSetPageSuccesBatch ')
+  // console.log(items)
+  return {
+    type: SET_PAGE_SUCCESS_BATCH,
+    items
+  }
+}
+
+export const actSetTypeList = (list) => ({
+  type: SET_TYPELIST,
+  items: list
 })
-// export const actFetchPageFailure = (opt) => ({
-//   type: NET_ITEMS_FAILURE,
-//   ...opt
-// })
 
 export const actSetEntities = (opt) => ({
   type: SET_ENTITIES,
@@ -61,9 +59,4 @@ export const actSetEntities = (opt) => ({
 export const actSetError = (msg) => ({
   type: SET_ERROR,
   error: msg
-})
-
-export const actSetTypeList = (list) => ({
-  type: SET_TYPELIST,
-  items: list
 })

@@ -6,11 +6,11 @@ draw rows: speed not equel, slow and jumps
   +start all array, draw sequence
 
 cache items(pokemons data) localy in browser (keep between sesions)
-use wrapperLib(IdexedDB)
++use wrapperLib(IdexedDB)
   https://github.com/PokeAPI/pokeapi-js-wrapper
   +step1) cache full object
   +step2) cache simplified obj
-  step3) w/o lib, my code (cache or (fetch_normalize_and_cache)
++step3) w/o lib, my code (cache or (fetch_normalize_and_cache)
 use PWA
 ??use ServiceWorker for fetching
 
@@ -23,20 +23,9 @@ shiny new, after default_sprite
 back: hover end
 
 
-getObject(entities,id) {
-  if (entities) {
-    const storedData = entities[id]
-    if (storedData) {
-      return storedData
-    }
-  }
+pagination
+  <a> || <button> : accessable
 
-  let cachedData = cache[id]
-  if (!cachedData) {
-    cachedData = normalize(fetch(id))
-    set_entities
-    cache[id] = cachedData
-  }
+?preload next page
 
-  return cachedData
-}
+?use chanel selection > pagination

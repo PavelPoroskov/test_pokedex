@@ -7,7 +7,9 @@ import {
   STATUS_REQUEST,
   // STATUS_SUCCES,
   STATUS_LOADING,
-  STATUS_ERROR
+  STATUS_ERROR,
+
+  arColumns
 } from '../../constants'
 
 import TableOneRow from '../TableOneRow'
@@ -22,7 +24,7 @@ class TableRows extends Component {
 
     const {ids, status} = this.props
 
-    if (!ids) {
+    if (ids.length === 0) {
       let msg
       switch (status) {
         case STATUS_REQUEST:
@@ -42,10 +44,15 @@ class TableRows extends Component {
 
       return (
         <tr id='Message'>
-          <td id='Message' className='Message'>{msg}</td>
+          <td id='Message' className='Message' align='center'
+            colSpan={arColumns.length}>{msg}
+          </td>
         </tr>
       )
     }
+
+    // console.log('!!ids')
+    // console.log(ids)
 
     const result = ids.map(id =>
       <TableOneRow id={id} key={id} />)
@@ -54,7 +61,8 @@ class TableRows extends Component {
       const msg = 'Error loading. Not all result have been loaded'
       const msgErr = (
         <tr id='Message' key='Message'>
-          <td id='Message' className='Message'>{msg}</td>
+          <td id='Message' className='Message' align='center'
+            colSpan={arColumns.length}>{msg}</td>
         </tr>
       )
       result.push(msgErr)
@@ -70,7 +78,7 @@ TableRows.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  ids: state.currentPageItems,
+  ids: state.pageItems,
   status: state.status
 })
 
