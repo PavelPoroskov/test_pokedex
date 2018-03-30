@@ -14,12 +14,18 @@ class FilterName extends Component {
 
     this.onChange = this.onChange.bind(this)
     this.handleClear = this.handleClear.bind(this)
+
+    this.doSearch = this.doSearch.bind(this)
+    this.debouncedSearch = debounce(this.doSearch, 400)
   }
 
+  doSearch () {
+    // console.log('doSearch ' + this.state.value)
+    this.props.onSetFilterSubStr(this.state.value)
+  }
   onChange (event) {
     this.setState({value: event.target.value})
-    debounce(this.props.onSetFilterSubStr, 1000)(event.target.value)
-    // this.props.onSetFilterSubStr(event.target.value)
+    this.debouncedSearch()
   }
 
   handleClear (event) {
@@ -27,10 +33,12 @@ class FilterName extends Component {
       return
     }
     this.setState({value: ''})
-    this.props.onSetFilterSubStr('')
+    this.debouncedSearch()
   }
 
   render () {
+    // console.log('render FilterName ' + this.state.value)
+
     return (
       <div className='FilterName'>
         <label>Name: </label>

@@ -17,10 +17,10 @@ function * loadEnough ({offset, substr, haveLength, toLength}) {
 
   let newHaveLength = haveLength
 
-  // if (toSetPage1) {
-  //   toSetPage1 = false
-  //   yield put(actSetPage(1))
-  // }
+  if (toSetPage1) {
+    toSetPage1 = false
+    yield put(actSetPage(1))
+  }
 
   while (true) {
     const resultNorm = yield call(requestRes, {
@@ -36,17 +36,17 @@ function * loadEnough ({offset, substr, haveLength, toLength}) {
 
     isFull = !result.next
 
-    if (listBatch) {
+    if (listBatch.length > 0 || isFull) {
       newHaveLength = newHaveLength + listBatch.length
       yield put(actSelectionSuccesBatch({
         fullLength: newHaveLength,
-        items: listBatch,
+        items: listBatch.slice(),
         isFull
       }))
-      if (toSetPage1) {
-        toSetPage1 = false
-        yield put(actSetPage(1))
-      }
+      // if (toSetPage1) {
+      //   toSetPage1 = false
+      //   yield put(actSetPage(1))
+      // }
     }
 
     offset = offset + cachePageSize
@@ -69,49 +69,48 @@ function * loadEnough ({offset, substr, haveLength, toLength}) {
 function * loadPokemonList (substr) {
   //
   // step 1: load enough items
-  let offset = 0
 
   const pageUISize = yield select(state => state.pageSize)
+  // let toLength = pageUISize + 1
+  let toLength = pageUISize
+
   let haveLength = 0
-  let toLength = pageUISize + 1
+  let offset = 0
+  let isFull = false
 
   const {
     offset: newOffset,
-    isFull,
+    isFull: newIsFull,
     haveLength: newHaveLength
   } = yield call(loadEnough, {offset, substr, haveLength, toLength})
   offset = newOffset
   haveLength = newHaveLength
-  if (isFull) {
-    return
-  }
+  isFull = newIsFull
 
   //
   // step 2: add items on event 'SELECTION_CONTINUE'
-  while (true) {
+  while (!isFull) {
     const { needEnd0 } = yield take(SELECTION_CONTINUE)
     // console.log('continue ')
     // if (fromLength <= haveLength) {
     //   // [fromLength-1, min(newToLength,haveLength)-1]
     //   // yield put(actPageUpdate(pageNum))
     // }
-    const toEnd0 = needEnd0 + 1
-    toLength = toEnd0 + 1
+    // const toEnd0 = needEnd0 + 1
+    // toLength = toEnd0 + 1
+    toLength = needEnd0 + 1
     if (toLength <= haveLength) {
       continue
     }
 
     const {
       offset: newOffset,
-      isFull,
+      isFull: newIsFull,
       haveLength: newHaveLength
     } = yield call(loadEnough, {offset, substr, haveLength, toLength})
     offset = newOffset
     haveLength = newHaveLength
-
-    if (isFull) {
-      break
-    }
+    isFull = newIsFull
   }
   //
 }
@@ -121,6 +120,8 @@ function * worker (action) {
     const {type, substr} = yield select(state => state.filter)
 
     if (type) {
+      yield put(actSetPage(1))
+
       const result = yield call(requestRes, { resource: 'type', id: type })
       const typeId = result.result
       const typeObj = result.entities.types[typeId]
@@ -129,15 +130,15 @@ function * worker (action) {
       if (substr) {
         list = list.filter(name => name.includes(substr))
       }
-      console.log('type empty')
-      console.log(list)
-      console.log(list.length)
+      // console.log('type empty')
+      // console.log(list)
+      // console.log(list.length)
       yield put(actSelectionSuccesBatch({
         items: list,
         isFull: true,
         fullLength: list.length
       }))
-      yield put(actSetPage(1))
+      // yield put(actSetPage(1))
       //
     } else {
       //

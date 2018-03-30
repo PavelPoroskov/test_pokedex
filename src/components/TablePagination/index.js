@@ -26,10 +26,10 @@ class TablePagination extends Component {
   }
 
   // shouldComponentUpdate (nextProps, nextState) {
-  //   if (nextProps.totalPages === 0) {
-  //     return false
+  //   if (nextProps.currentPage !== this.props.currentPage) {
+  //     return true
   //   }
-  //   return true
+  //   return false
   // }
 
   handleClick (num, e) {
@@ -49,9 +49,15 @@ class TablePagination extends Component {
     }
 
     const currentPage = this.props.currentPage
-    const cls = {
-      '...': 'disabled',
-      [currentPage]: 'active'
+
+    const fnCls = (num) => {
+      if (num === '...') {
+        return 'disabled'
+      } else if (num === currentPage) {
+        return 'active'
+      }
+
+      return ''
     }
 
     const fnClick = (num) => {
@@ -63,7 +69,7 @@ class TablePagination extends Component {
     }
 
     return arr.map((num, ind) => (
-      <li className={`page-item ${cls[num]}`} key={num}>
+      <li className={`page-item ${fnCls(num)}`} key={num}>
         <a className='page-link'
           onClick={fnClick(num)}>{num}
         </a>
@@ -147,8 +153,8 @@ class TablePagination extends Component {
       <nav >
         <ul className='pagination'>
           {prevBtn}
-          {nextBtn}
           {arrBtns}
+          {nextBtn}
         </ul>
       </nav>
     )
@@ -172,7 +178,7 @@ const selTotalPages = createSelector(
     let pages = (total - rest) / pageSize
     pages = pages + (rest ? 1 : 0)
 
-    return pages
+    return Math.max(1, pages)
   }
 )
 

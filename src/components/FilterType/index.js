@@ -17,28 +17,16 @@ class FilterType extends Component {
     this.handleClear = this.handleClear.bind(this)
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.value !== this.state.value) {
-      this.setState({value: nextProps.value})
-    }
-  }
+  // componentWillReceiveProps (nextProps) {
+  //   if (nextProps.value !== this.state.value) {
+  //     this.setState({value: nextProps.value})
+  //   }
+  // }
 
   // shouldComponentUpdate (nextProps, nextState) {
-  //   if (nextProps.types !== this.props.types) {
+  //   if (nextProps.value !== this.state.value) {
   //     return true
   //   }
-  //   if (nextState !== this.state) {
-  //     // console.log('nextState.value !== this.state.value')
-  //     // console.log('nextState.value ' + nextState.value)
-  //     // console.log('this.state.value ' + this.state.value)
-  //     return true
-  //   }
-  //   // if (nextProps.value !== this.state.value) {
-  //   //   console.log('nextProps.value !== this.state.value')
-  //   //   console.log('nextProps.value ' + nextProps.value)
-  //   //   console.log('this.state.value ' + this.state.value)
-  //   //   return true
-  //   // }
   //   return false
   // }
 
@@ -56,7 +44,7 @@ class FilterType extends Component {
   }
 
   render () {
-    console.log('render FilterType ')
+    // console.log('render FilterType ' + this.props.value)
 
     const {types} = this.props
 

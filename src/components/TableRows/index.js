@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import {
   STATUS_REQUEST,
-  // STATUS_SUCCES,
+  STATUS_SUCCES,
   STATUS_LOADING,
   STATUS_ERROR,
 
@@ -20,9 +20,9 @@ class TableRows extends Component {
   // }
 
   render () {
-    // console.log('render TableRows')
-
     const {ids, status} = this.props
+    // console.log('render TableRows ' + status)
+    // console.log(ids)
 
     if (ids.length === 0) {
       let msg
@@ -31,9 +31,9 @@ class TableRows extends Component {
         case STATUS_LOADING:
           msg = 'Loading...'
           break
-        // case STATUS_SUCCES:
-        //   msg = 'Empty result for this filter.'
-        //   break
+        case STATUS_SUCCES:
+          msg = 'Empty result for this filter.'
+          break
         case STATUS_ERROR:
           msg = 'Error loading.'
           break
@@ -41,7 +41,7 @@ class TableRows extends Component {
           // msg = 'Ok.'
           break
       }
-
+      // console.log(msg)
       return (
         <tr id='Message'>
           <td id='Message' className='Message' align='center'
@@ -59,6 +59,7 @@ class TableRows extends Component {
 
     if (status === STATUS_ERROR) {
       const msg = 'Error loading. Not all result have been loaded'
+      // console.log(msg)
       const msgErr = (
         <tr id='Message' key='Message'>
           <td id='Message' className='Message' align='center'

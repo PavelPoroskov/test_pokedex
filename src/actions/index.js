@@ -19,6 +19,8 @@ export const actChangeFilter = (opt) => ({
 })
 
 export const actSelectionSuccesBatch = ({items, isFull, fullLength}) => {
+  // console.log('actSelectionSuccesBatch ')
+  // console.log(items)
   return {
     type: SELECTION_SUCCES_BATCH,
     items,

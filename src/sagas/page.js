@@ -16,9 +16,9 @@ import {
 
 function * loadObjects ({list, preload}) {
   //
-  if (list.length === 0) {
-    return
-  }
+  // if (list.length === 0) {
+  //   return
+  // }
 
   const storedObjs = yield select(state => state.entities.pokemons)
 
@@ -28,7 +28,7 @@ function * loadObjects ({list, preload}) {
     if (storedObjs && (name in storedObjs)) {
       arStored.push(name)
     } else {
-      if (arStored) {
+      if (arStored.length > 0) {
         arComands.push({ names: arStored.slice() })
         arStored = []
       }
@@ -39,7 +39,7 @@ function * loadObjects ({list, preload}) {
       })
     }
   })
-  if (arStored) {
+  if (arStored.length > 0) {
     arComands.push({ names: arStored.slice() })
     arStored = []
   }
@@ -58,11 +58,11 @@ function * loadObjects ({list, preload}) {
 
     if (!preload) {
       // const isLastBatch = (i === arComands.length - 1)
-      if (curCommand.names.length !== 0) {
-        // console.log('put(actSetPageSuccesBatch ' + curCommand.names[0])
-        // console.log(curCommand.names)
-        yield put(actSetPageSuccesBatch(curCommand.names))
-      }
+      // if (curCommand.names.length !== 0) {
+      // console.log('put(actSetPageSuccesBatch ' + curCommand.names[0])
+      // console.log(curCommand.names)
+      yield put(actSetPageSuccesBatch(curCommand.names))
+      // }
     }
   }
 }

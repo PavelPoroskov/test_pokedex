@@ -10,7 +10,7 @@ export const cachePageSize = 20
 
 const CACHE_PREFIX = 'pokedex-test-'
 // const urlApi = 'https://pokeapi.co/api/v2/'
-const msTimeout = 40 * 1000 // 20 sek
+const msTimeout = 60 * 1000 // 20 sek
 // const secTimeout = msTimeout / 1000
 
 // const dFrom = 1522149358224

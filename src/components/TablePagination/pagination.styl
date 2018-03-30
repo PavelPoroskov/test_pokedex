@@ -1,9 +1,13 @@
+@require '../../styles/share'
+
 .pagination 
 /*  display: flex
   line-height: 2*/
   display: flex
-  /*padding-left: 0*/
+  padding-left 0
   list-style: none
+  -webkit-margin-before: 0.5rem
+  -webkit-margin-after: 0.5rem
   /*border-radius: .25rem*/
 
 
@@ -17,23 +21,20 @@
 /*  padding: 0 4px
   margin: 0 2px*/
 
-.page-item:first-child > a 
-  border-radius: 4px 0 0 4px
 
+// .page-link:not(:disabled) 
+//   cursor: pointer
 
-.page-item:last-child > a 
-  border-radius: 0 4px 4px 0
-
-
-.page-link:not(:disabled) 
+.page-link
+  text-decoration: none
+  color: #007bff
+  
+.page-item
   cursor: pointer
-
-.page-link 
   display: block
   padding: .5rem .8rem
   margin-left: -1px
   line-height: 1.25
-  text-decoration: none
   color: #007bff
   background-color: #fff
   border: 1px solid #dee2e6  
@@ -42,9 +43,35 @@
     background-color: color-hover
     border-color: #dee2e6
 
-.page-item.active .page-link 
+.page-item:first-child
+  border-radius: 4px 0 0 4px
+  margin-left: 0
+
+.page-item:last-child
+  border-radius: 0 4px 4px 0
+
+// .page-item.active .page-link 
+//   z-index: 1
+//   color: #fff
+//   background-color: #007bff
+//   border-color: #007bff
+/*  border: 2px solid #007bff  */
+
+.page-item.disabled 
   z-index: 1
+  color: color-base
+  // cursor: not-allowed
+
+.page-item.disabled .page-link
+  color: color-base
+
+.page-item.active
+  // cursor: not-allowed
   color: #fff
   background-color: #007bff
   border-color: #007bff
-/*  border: 2px solid #007bff  */
+
+.page-item.active .page-link
+  color: #fff
+  // background-color: #007bff
+  // border-color: #007bff

@@ -3,10 +3,12 @@ import {
   SET_PAGE_SUCCESS_BATCH
 } from '../actions/ActionTypes'
 
-const pageItems = (state = [], action) => {
+const initSate = []
+
+const pageItems = (state = initSate, action) => {
   switch (action.type) {
     case SET_PAGE:
-      return []
+      return initSate
     case SET_PAGE_SUCCESS_BATCH:
       return [...state, ...action.items]
     default:
