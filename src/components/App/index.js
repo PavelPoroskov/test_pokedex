@@ -5,7 +5,7 @@ import FilterType from '../FilterType'
 import TablePagination from '../TablePagination'
 import TableWithData from '../TableWithData'
 
-// import './App.css'
+import '../../styles/css/App.css'
 
 class App extends Component {
   render () {

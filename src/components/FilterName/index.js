@@ -6,6 +6,8 @@ import debounce from 'lodash.debounce'
 
 import { actChangeFilter } from '../../actions'
 
+import '../../styles/css/FilterName.css'
+
 class FilterName extends Component {
   constructor (props) {
     super(props)
@@ -16,7 +18,7 @@ class FilterName extends Component {
     this.handleClear = this.handleClear.bind(this)
 
     this.doSearch = this.doSearch.bind(this)
-    this.debouncedSearch = debounce(this.doSearch, 400)
+    this.debouncedSearch = debounce(this.doSearch, 500)
   }
 
   doSearch () {

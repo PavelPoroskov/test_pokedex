@@ -5,7 +5,7 @@ import {createSelector} from 'reselect'
 
 import { actChangeFilter } from '../../actions'
 
-// import './index.css'
+import '../../styles/css/FilterType.css'
 
 class FilterType extends Component {
   constructor (props) {
@@ -17,11 +17,11 @@ class FilterType extends Component {
     this.handleClear = this.handleClear.bind(this)
   }
 
-  // componentWillReceiveProps (nextProps) {
-  //   if (nextProps.value !== this.state.value) {
-  //     this.setState({value: nextProps.value})
-  //   }
-  // }
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.value !== this.state.value) {
+      this.setState({value: nextProps.value})
+    }
+  }
 
   // shouldComponentUpdate (nextProps, nextState) {
   //   if (nextProps.value !== this.state.value) {

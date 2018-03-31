@@ -5,6 +5,8 @@ import TableRows from '../TableRows'
 
 import {arColumns} from '../../constants'
 
+import '../../styles/css/TableWithData.css'
+
 class TableWithData extends Component {
   render () {
     // console.log('render TableWithData')
@@ -13,7 +15,7 @@ class TableWithData extends Component {
       <th key={ind} className={col.className}>{col.title}</th>)
 
     return (
-      <table>
+      <table className='TableWithData'>
         <thead>
           <tr>
             {titles}

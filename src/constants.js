@@ -1,7 +1,8 @@
 // import {cachePageSize} from './api/cachedfetch'
 
-export const initUIPageSize = 8
-// export const requestBatchSize = cachePageSize
+export const initUIPageSize = 7
+
+export const PaginationNumBtnsQuantity = 8
 
 export const STATUS_NOSTATUS = 'STATUS_NOTSTATUS'
 export const STATUS_REQUEST = 'STATUS_REQUEST'

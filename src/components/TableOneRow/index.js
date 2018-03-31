@@ -6,6 +6,8 @@ import {arColumns} from '../../constants'
 
 import TypeLabel from '../TypeLabel'
 
+import '../../styles/css/TableOneRow.css'
+
 class TableOneRow extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     return (nextProps.id !== this.props.id)
@@ -67,7 +69,7 @@ class TableOneRow extends Component {
       <td key={ind} className={cell.className}>{cell.content}</td>)
 
     return (
-      <tr>
+      <tr className='TableOneRow'>
         {cells}
       </tr>
     )

@@ -3,7 +3,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {createSelector} from 'reselect'
 
+import { PaginationNumBtnsQuantity } from '../../constants'
+
 import { actSetPage } from '../../actions'
+
+import '../../styles/css/TablePagination.css'
 
 const range = (beg, end) => {
   let arr = []
@@ -86,29 +90,37 @@ class TablePagination extends Component {
     if (currentPage < totalPages || !selectionIsFull) {
       nextBtn = (
         <li className='page-item'>
-          <a className='page-link' href='#'
+          <a className='page-link'
             onClick={this.handleClick.bind(this, currentPage + 1)}
           >Next</a>
         </li>
       )
     } else {
-      nextBtn = <li className='page-item disabled'>Next</li>
+      nextBtn = (
+        <li className='page-item disabled'>
+          <span className='page-link'>Next</span>
+        </li>
+      )
     }
 
     let prevBtn
     if (currentPage <= 1) {
-      prevBtn = <li className='page-item disabled'>Previous</li>
+      prevBtn = (
+        <li className='page-item disabled'>
+          <span className='page-link'>Previous</span>
+        </li>
+      )
     } else {
       prevBtn = (
         <li className='page-item'>
-          <a className='page-link' href='#'
+          <a className='page-link'
             onClick={this.handleClick.bind(this, currentPage - 1)}
           >Previous</a>
         </li>
       )
     }
 
-    const drawButtons = 5
+    const drawButtons = PaginationNumBtnsQuantity
 
     let arrBtns
     if (selectionIsFull) {
@@ -150,7 +162,7 @@ class TablePagination extends Component {
     }
 
     return (
-      <nav >
+      <nav className='TablePagination'>
         <ul className='pagination'>
           {prevBtn}
           {arrBtns}
@@ -192,7 +204,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSetPage: (pageNum) => {
-    // console.log(pageNum)
+    console.log('want pageNum ' + pageNum)
     dispatch(actSetPage(pageNum))
   }
 })

@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 
 import { actChangeFilter } from '../../actions'
 
+import '../../styles/css/TypeLabel.css'
+
 class TypeLabel extends Component {
   constructor (props) {
     super(props)
@@ -24,9 +26,12 @@ class TypeLabel extends Component {
     // console.log('render TypeLabel ')
 
     const tag = this.props.id
-    return <a href={`#${tag}`}
-      onClick={this.handleClick}
-      className={`type type-${tag}`}>{tag}</a>
+    return (
+      <a className={`TypeLabel type type-${tag}`}
+        onClick={this.handleClick}>
+        {tag}
+      </a>
+    )
   }
 }
 
