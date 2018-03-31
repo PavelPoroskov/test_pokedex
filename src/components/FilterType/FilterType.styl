@@ -1,11 +1,20 @@
 @require '../../styles/share'
 @require '../../styles/types'
+  
 
-div.Filter
-  display flex
-
-.FilterType select
-  font-size 1rem
+.FilterType
+  -webkit-margin-before: 0.5rem
+  -webkit-margin-after: 0.5rem  
+  margin-top: 0.5rem
+  margin-bottom: 0.7rem
+  & label
+    margin-right fontbasesize*0.5  
+  & select
+    font-size fontbasesize*1.1
+    &.type
+      padding: 0 0
+      width: 7rem
+      text-shadow: 0 0 0
 
 option.type-, 
 option.type-unknown,
@@ -16,16 +25,11 @@ select.type-shadow
   background: white
   color: black
   
-  
-select.type
-  padding: 0 0
-  width: 7rem
-  text-shadow: 0 0 0
 
-  
 .BtnClear 
   background-color inherit
   border 0
+  font-size fontbasesize*1.1
   &:hover
     //border 1px solid gray
     background-color color-hover

@@ -43,7 +43,7 @@ class FilterName extends Component {
 
     return (
       <div className='FilterName'>
-        <label>Name: </label>
+        <label>Name:</label>
         <input type='text' value={this.state.value}
           onChange={this.onChange} />
         <button className='BtnClear' onClick={this.handleClear}>X</button>

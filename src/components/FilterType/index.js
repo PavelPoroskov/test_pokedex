@@ -58,7 +58,7 @@ class FilterType extends Component {
 
     return (
       <div className='FilterType'>
-        <label>Type: </label>
+        <label>Type:</label>
         <select value={this.state.value}
           className={`type type-${this.state.value}`}
           onChange={this.handleSelect}>

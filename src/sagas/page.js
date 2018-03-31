@@ -49,10 +49,16 @@ function * loadObjects ({list, preload}) {
     // const result = yield call(fnWrap(arPromises[i]))
     const curCommand = arComands[i]
     if (curCommand.promise) {
-      const result = yield curCommand.promise
-      yield put(actSetEntities({
-        entities: result.entities
-      }))
+      try {
+        //
+        const result = yield curCommand.promise
+        yield put(actSetEntities({
+          entities: result.entities
+        }))
+      } catch (e) {
+        //
+        console.log('FAILD FETCH ' + curCommand.names[0])
+      }
       // console.log('output ' + curCommand.names[0] + ' ' + msSince())
     }
 

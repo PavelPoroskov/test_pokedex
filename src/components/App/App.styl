@@ -1,3 +1,5 @@
+@require '../../styles/share'
+
 body
   margin: 0
   padding: 0
@@ -15,6 +17,38 @@ body
   flex-flow: column
   justify-content start
   align-items center
+  width 74%
   
-.TablePagination
-  align-self flex-end
+.AppHeader
+  font-size fontbasesize*2
+  max-height 56px
+
+.AppContent
+  display flex
+  // flex-direction row-reverse
+  justify-content center
+  align-items center
+  width 100%
+  flex-wrap wrap
+  
+  & .FilterName
+    flex auto
+    // display flex
+    // flex-wrap nowrap
+    // align-self flex-start
+    display flex
+    flex-direction row
+    justify-content center
+
+  & .FilterType
+    //flex 1 0 100%
+    flex auto
+    // align-self flex-start
+    
+    // width 100%
+    display flex
+    flex-direction row
+    justify-content center
+  
+  & .TablePagination
+    align-self flex-end

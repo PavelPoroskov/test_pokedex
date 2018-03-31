@@ -2,7 +2,7 @@
 
 export const initUIPageSize = 7
 
-export const PaginationNumBtnsQuantity = 8
+export const PaginationNumBtnsQuantity = 5
 
 export const STATUS_NOSTATUS = 'STATUS_NOTSTATUS'
 export const STATUS_REQUEST = 'STATUS_REQUEST'

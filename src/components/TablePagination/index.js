@@ -84,7 +84,7 @@ class TablePagination extends Component {
   render () {
     // disabled
     const {currentPage, totalPages, selectionIsFull} = this.props
-    console.log('render TablePagination ' + totalPages + ' current ' + currentPage)
+    // console.log('render TablePagination ' + totalPages + ' current ' + currentPage)
 
     let nextBtn
     if (currentPage < totalPages || !selectionIsFull) {
@@ -204,7 +204,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSetPage: (pageNum) => {
-    console.log('want pageNum ' + pageNum)
+    // console.log('want pageNum ' + pageNum)
     dispatch(actSetPage(pageNum))
   }
 })
