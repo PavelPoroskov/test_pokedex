@@ -14,12 +14,12 @@ class App extends Component {
         <div className='AppHeader'>
           Pokedex
         </div>
-        <div className='AppContent'>
+        <div className='Filter'>
           <FilterName />
           <FilterType />
-          <TableWithData />
-          <TablePagination />
         </div>
+        <TableWithData />
+        <TablePagination />
       </div>
     )
   }

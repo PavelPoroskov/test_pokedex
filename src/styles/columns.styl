@@ -1,3 +1,46 @@
-.avatar
+th, td
+  vertical-align: middle
+  
+th 
+  padding: 6px 10px
+  text-align: left
+  &.number 
+    padding: 6px 0
+    text-align: center
+
+td 
+  padding: 3px 10px
+  &.avatar 
+    padding: 0
+    line-height 0
+    & img 
+      min-width: 58px
+      max-width: 58px
+      // min-height: 54px
+      // max-height: 54px 
+  &.name
+    text-align: left
+  &.id 
+    text-align: right
+  &.number 
+    // padding-left 0
+    padding 0
+    // text-align: right
+    text-align: center
+
+th.avatar, td.avatar
   min-width: 75px
   max-width: 75px
+  
+th.name, td.name 
+  min-width 8rem
+  max-width 8rem
+
+th.col-types, td.col-types 
+  min-width 4rem
+  max-width 4rem
+
+th.number, td.number
+  min-width: 4rem
+  max-width: 4rem
+
