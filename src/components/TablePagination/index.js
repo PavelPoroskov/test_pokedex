@@ -19,6 +19,17 @@ const range = (beg, end) => {
   return arr
 }
 
+const unitArr = (arrBeg, arrMid, arrEnd) => {
+  let arr = arrBeg
+  if (arrMid) {
+    arr = arr.concat(arrMid)
+  }
+  if (arrEnd) {
+    arr = arr.concat(arrEnd)
+  }
+  return arr
+}
+
 class TablePagination extends Component {
   constructor (props) {
     super(props)
@@ -26,9 +37,100 @@ class TablePagination extends Component {
     // this.state = {value: props.currentPage}
 
     this.handleClick = this.handleClick.bind(this)
+    this.arrangePageNums = this.arrangePageNums.bind(this)
     this.drawArrayBtns = this.drawArrayBtns.bind(this)
   }
 
+  arrangePageNums (currentPage, totalPages, selectionIsFull, isStepPrev) {
+    //
+    const drawButtons = PaginationNumBtnsQuantity
+    let arrBtns
+    if (selectionIsFull) {
+      //
+      if (totalPages <= drawButtons) {
+        // 1, 2, 3, 4, 5
+        arrBtns = range(1, totalPages)
+      } else {
+        const avalableBtn = drawButtons - 2 // (last/first)Btn, ...Btn
+        if (totalPages - 1 <= currentPage) {
+          // 2, 3, 4, 5, 6
+          arrBtns = range(totalPages - drawButtons + 1, totalPages)
+        } else {
+          if (isStepPrev) {
+            arrBtns = unitArr(range(currentPage, currentPage + avalableBtn - 1), ['...'], [totalPages])
+          } else {
+            if (currentPage <= avalableBtn) {
+              // 1, 2, 3, ..., 6
+              arrBtns = unitArr(range(1, avalableBtn), ['...'], [totalPages])
+            } else {
+              // 4, 5, 6, ... 10
+              arrBtns = unitArr(range(currentPage - avalableBtn + 1, currentPage), ['...'], [totalPages])
+            }
+          }
+        }
+      }
+    } else { // not selectionIsFull
+      //
+      if (totalPages < drawButtons) {
+        // 1, 2, 3, 4, 5
+        arrBtns = unitArr(range(1, totalPages), ['...'])
+      } else {
+        const avalableBtn = drawButtons - 1 // ...Btn
+        if (isStepPrev) {
+          arrBtns = unitArr(range(currentPage, currentPage + avalableBtn - 1), ['...'])
+        } else {
+          if (currentPage <= avalableBtn) {
+            arrBtns = unitArr(range(1, avalableBtn), ['...'])
+          } else {
+            arrBtns = unitArr(range(currentPage - avalableBtn + 1, currentPage), ['...'])
+          }
+        }
+      }
+    }
+
+    return arrBtns
+  }
+
+  componentWillMount () {
+    //
+    const {currentPage, totalPages, selectionIsFull} = this.props
+
+    this.arrPageNums = this.arrangePageNums(currentPage, totalPages, selectionIsFull)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const nextPageNum = nextProps.currentPage
+
+    const {currentPage, totalPages, selectionIsFull} = nextProps
+
+    let testArr
+    if (this.props.totalPages === totalPages &&
+    this.props.selectionIsFull === selectionIsFull) {
+      testArr = this.arrPageNums
+    } else {
+      testArr = this.arrangePageNums(this.props.currentPage, totalPages, selectionIsFull)
+    }
+
+    const iNext = testArr.indexOf(currentPage)
+    const iDots = testArr.indexOf('...')
+
+    let toRearrange = false
+    let isStepPrev = false
+    if (iNext === -1) {
+      toRearrange = true
+      isStepPrev = (currentPage + 1 === this.props.currentPage)
+    } else if (iDots !== -1) {
+      if (iDots === testArr.length - 2 && iNext === testArr.length - 1) {
+        toRearrange = true
+      }
+    }
+
+    if (toRearrange) {
+      this.arrPageNums = this.arrangePageNums(nextPageNum, totalPages, selectionIsFull, isStepPrev)
+    } else {
+      this.arrPageNums = testArr
+    }
+  }
   // shouldComponentUpdate (nextProps, nextState) {
   //   if (nextProps.currentPage !== this.props.currentPage) {
   //     return true
@@ -41,17 +143,7 @@ class TablePagination extends Component {
     this.props.onSetPage(num)
   }
 
-  drawArrayBtns (arrBeg, arrMid, arrEnd) {
-    let arr = arrBeg
-    if (arrMid) {
-      // arr.push('...')
-      arr = arr.concat(arrMid)
-    }
-    if (arrEnd) {
-      // arr.push('...')
-      arr = arr.concat(arrEnd)
-    }
-
+  drawArrayBtns (arr) {
     const currentPage = this.props.currentPage
 
     const fnCls = (num) => {
@@ -120,43 +212,7 @@ class TablePagination extends Component {
       )
     }
 
-    const drawButtons = PaginationNumBtnsQuantity
-
-    let arrBtns
-    if (selectionIsFull) {
-      //
-      if (totalPages <= drawButtons) {
-        // 1, 2, 3, 4, 5
-        arrBtns = this.drawArrayBtns(range(1, totalPages))
-      } else {
-        const avalableBtn = drawButtons - 2 // (last/first)Btn, ...Btn
-        if (totalPages - avalableBtn + 1 <= currentPage) {
-          // 1, ..., 4, 5, 6
-          arrBtns = this.drawArrayBtns([1], ['...'], range(totalPages - avalableBtn + 1, totalPages))
-        } else {
-          if (currentPage <= avalableBtn) {
-            // 1, 2, 3, ..., 6
-            arrBtns = this.drawArrayBtns(range(1, avalableBtn), ['...'], [totalPages])
-          } else {
-            // 4, 5, 6, ... 10
-            arrBtns = this.drawArrayBtns(range(currentPage - avalableBtn + 1, currentPage), ['...'], [totalPages])
-          }
-        }
-      }
-    } else { // not selectionIsFull
-      //
-      if (totalPages < drawButtons) {
-        // 1, 2, 3, 4, 5
-        arrBtns = this.drawArrayBtns(range(1, totalPages), ['...'])
-      } else {
-        const avalableBtn = drawButtons - 1 // ...Btn
-        if (currentPage <= avalableBtn) {
-          arrBtns = this.drawArrayBtns(range(1, avalableBtn), ['...'])
-        } else {
-          arrBtns = this.drawArrayBtns(range(currentPage - avalableBtn + 1, currentPage), ['...'])
-        }
-      }
-    }
+    const arrBtns = this.drawArrayBtns(this.arrPageNums)
 
     return (
       <nav className='TablePagination'>
