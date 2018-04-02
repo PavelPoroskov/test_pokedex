@@ -1,16 +1,37 @@
 
 problems
-TableWithData draw 2 times, first no need?
-TableWithData header witwout rows looks bad
-draw rows: speed not equel, slow and jumps
-  +start all array, draw sequence
+)pagination, not jump, nature reaction
+  next: curBtn + 1 or shift pagination and last btn
+  prev: curBtn + 1 or shift pagination and first btn
+)?event PAGE_SUCCES_END
+  sandwatch/ css animation (google login: top bar)
+) filter 'dr' / 'ul' / 'mega' & BUG
+  not all result on page
+  reclick page => show all
+    ?one unfetched item stop all next items
+      : try{}catch() {}
+        retry later?
 
-cache items(pokemons data) localy in browser (keep between sesions)
-+use wrapperLib(IdexedDB)
-  https://github.com/PokeAPI/pokeapi-js-wrapper
+  show first name and avatar
+  afte load object show attributes
+
+) click Last, click First: not react
+    ?streatch link on hole button
+
+
+TableWithData draw 2 times, first no need?
+
+.TableWithData header witwout rows looks bad
+  set min-width/max-width of columns
+.draw rows: speed not equel, slow and jumps
+  +start all array of promises, draw sequence
+
+.cache items(pokemons data) localy in browser (keep between sesions)
+  +use wrapperLib(IdexedDB)
+    https://github.com/PokeAPI/pokeapi-js-wrapper
   +step1) cache full object
   +step2) cache simplified obj
-+step3) w/o lib, my code (cache or (fetch_normalize_and_cache)
+  +step3) w/o lib, my code (cache or (fetch_normalize_and_cache)
 use PWA
 ??use ServiceWorker for fetching
 
@@ -23,9 +44,10 @@ shiny new, after default_sprite
 back: hover end
 
 
-pagination
+.pagination
   <a> || <button> : accessable
 
-?preload next page
+.preload next page
+  ?fork/cancel preload
 
 ?use chanel selection > pagination

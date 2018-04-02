@@ -134,15 +134,13 @@ class TablePagination extends Component {
           // 1, ..., 4, 5, 6
           arrBtns = this.drawArrayBtns([1], ['...'], range(totalPages - avalableBtn + 1, totalPages))
         } else {
-          // if (currentPage <= avalableBtn) {
-          // // 1, 2, 3, ..., 6
-
-          // 4, 5, 6, ... 10
-          const rest = currentPage % avalableBtn
-          const steps = rest || avalableBtn
-          const beg = currentPage - steps + 1
-
-          arrBtns = this.drawArrayBtns(range(beg, beg + avalableBtn - 1), ['...'], [totalPages])
+          if (currentPage <= avalableBtn) {
+            // 1, 2, 3, ..., 6
+            arrBtns = this.drawArrayBtns(range(1, avalableBtn), ['...'], [totalPages])
+          } else {
+            // 4, 5, 6, ... 10
+            arrBtns = this.drawArrayBtns(range(currentPage - avalableBtn + 1, currentPage), ['...'], [totalPages])
+          }
         }
       }
     } else { // not selectionIsFull
@@ -152,11 +150,10 @@ class TablePagination extends Component {
         arrBtns = this.drawArrayBtns(range(1, totalPages), ['...'])
       } else {
         const avalableBtn = drawButtons - 1 // ...Btn
-        const begBtn = currentPage - avalableBtn + 1
-        if (begBtn > 0) {
-          arrBtns = this.drawArrayBtns(range(begBtn, currentPage), ['...'])
-        } else {
+        if (currentPage <= avalableBtn) {
           arrBtns = this.drawArrayBtns(range(1, avalableBtn), ['...'])
+        } else {
+          arrBtns = this.drawArrayBtns(range(currentPage - avalableBtn + 1, currentPage), ['...'])
         }
       }
     }
