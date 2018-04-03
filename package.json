@@ -4,11 +4,11 @@
   "private": true,
   "homepage": "http://PavelPoroskov.github.io/test_pokedex",
   "dependencies": {
+    "axios": "^0.18.0",
+    "localforage": "^1.7.1",
     "lodash.debounce": "^4.0.8",
-    "lodash.merge": "^4.6.1",
     "normalizr": "^3.2.4",
     "object-assign": "4.1.1",
-    "pokeapi-js-wrapper": "^1.1.1",
     "promise": "8.0.1",
     "raf": "3.4.0",
     "react": "^16.2.0",
@@ -17,8 +17,6 @@
     "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
     "reselect": "^3.0.1",
-    "semantic-ui-css": "^2.3.0",
-    "semantic-ui-react": "^0.78.3",
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {

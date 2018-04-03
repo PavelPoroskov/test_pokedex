@@ -69,11 +69,9 @@ class TablePagination extends Component {
     } else {
       avalableBtn = Math.min(PaginationNumBtnsQuantity - 2, totalPages)
       // !selectionIsFull ==> selectionIsFull
-      if (avalableBtn < end - beg + 1) {
-        // avalableBtn = end - beg + 1
-        if (flagUnToFull) {
+      if (flagUnToFull) {
+        if (avalableBtn < end - beg + 1) {
           end = beg + avalableBtn - 1
-          // console.log('end ')
         }
       }
     }
@@ -115,7 +113,8 @@ class TablePagination extends Component {
       } else if (end === totalPages - 2) {
         arrRes.push(totalPages - 1)
       }
-      if (currentPage !== totalPages) {
+      // if (currentPage !== totalPages) {
+      if (!(flagUnToFull && currentPage === totalPages)) {
         arrRes.push(totalPages)
       }
     }
