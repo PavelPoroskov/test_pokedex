@@ -12,6 +12,7 @@ import selectionParams from './selectionParams'
 import pageNum from './pageNum'
 import pageItems from './pageItems'
 
+import pokemonRefs from './pokemonRefs'
 import pokemons from './pokemons'
 import types from './types'
 
@@ -19,8 +20,9 @@ import pageSize from './pageSize'
 import status from './status'
 
 const entities = combineReducers({
-  pokemons,
-  types
+  pokemonRefs,
+  types,
+  pokemons
 })
 
 const rootReducer = combineReducers({

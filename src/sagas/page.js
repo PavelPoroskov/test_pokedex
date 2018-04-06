@@ -21,9 +21,11 @@ function * loadObjects ({list, preload}) {
   // }
 
   const storedObjs = yield select(state => state.entities.pokemons)
+  const storedRefs = yield select(state => state.entities.pokemonRefs)
 
   let arComands = []
   let arStored = []
+  let arPics = []
   list.forEach(name => {
     if (storedObjs && (name in storedObjs)) {
       arStored.push(name)
@@ -37,6 +39,9 @@ function * loadObjects ({list, preload}) {
         names: [name],
         promise: requestRes({resource: 'pokemon', id: name})
       })
+      let id = storedRefs[name].id
+      let urlPic = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+      arPics.push(window.fetch(urlPic))
     }
   })
   if (arStored.length > 0) {
@@ -51,9 +56,9 @@ function * loadObjects ({list, preload}) {
     if (curCommand.promise) {
       try {
         //
-        const result = yield curCommand.promise
+        const resultNorm = yield curCommand.promise
         yield put(actSetEntities({
-          entities: result.entities
+          entities: resultNorm.entities
         }))
       } catch (e) {
         //

@@ -42,6 +42,7 @@ class TablePagination extends Component {
   }
 
   arrangePageNums (currentPage, totalPages, selectionIsFull) {
+    console.log('totalPages ' + totalPages + ' currentPage ' + currentPage + ' selectionIsFull ' + selectionIsFull)
     //
     let beg = -1
     let end = -1
@@ -75,7 +76,13 @@ class TablePagination extends Component {
         }
       }
     }
-    if (end - beg + 1 < avalableBtn) {
+    // if (end - beg + 1 < avalableBtn) {
+    //   flagCondChanged = true
+    // }
+    // if (avalableBtn < end - beg + 1) {
+    //   flagCondChanged = true
+    // }
+    if (avalableBtn !== end - beg + 1) {
       flagCondChanged = true
     }
 
@@ -88,6 +95,7 @@ class TablePagination extends Component {
         return this.arrPageNums
       }
     }
+    console.log('avalableBtn ' + avalableBtn)
 
     if (currentPage < beg) {
       [beg, end] = [currentPage, currentPage + avalableBtn - 1]
@@ -105,6 +113,9 @@ class TablePagination extends Component {
     this.arrBase = range(beg, end)
     let arrRes = this.arrBase.slice()
 
+    // console.log('arrBase')
+    // console.log(this.arrBase)
+
     if (!selectionIsFull) {
       arrRes.push('...')
     } else {
@@ -115,10 +126,14 @@ class TablePagination extends Component {
       }
       // if (currentPage !== totalPages) {
       if (!(flagUnToFull && currentPage === totalPages)) {
-        arrRes.push(totalPages)
+        if (!(end === totalPages)) {
+          arrRes.push(totalPages)
+        }
       }
     }
 
+    // console.log('arrRes')
+    // console.log(arrRes)
     return arrRes
   }
 

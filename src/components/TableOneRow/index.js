@@ -42,7 +42,15 @@ class TableOneRow extends Component {
   objToRow (obj) {
     return arColumns.map(col => {
       let content = null
+
       if (col.from) {
+        if (!obj[col.from]) {
+          return {
+            content,
+            className: col.className
+          }
+        }
+
         if (col.type === 'image') {
           content = <img src={obj[col.from]} alt={obj['name']} />
         } else if (col.type === 'tags') {

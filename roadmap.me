@@ -1,3 +1,29 @@
+filter "ee"/ "mega" 1row
+first page 6 rows, must 7
+  clear filter and filter "ee": show 7 rows
+
+pokemon, merge
+  list -> {name, id, url, imgurl, }
+  loadObj +{..., attributes}
+
+do responsive
+  breakpoints
+  font-size: rem/em
+
+  equal
+    color
+    font
+    font-size
+
+server
+  ui:login/logout
+  saga/auth
+  JWT,
+  node, helmet
+  heroku
+  mongodb
+
+preload pics
 
 problems
 ).pagination, not jump, nature reaction

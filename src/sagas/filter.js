@@ -5,7 +5,7 @@ import { CHANGE_FILTER, SELECTION_CONTINUE } from '../actions/ActionTypes'
 import { requestRes, cachePageSize } from '../api/cachedfetch'
 
 import {
-  // actClearSelectedItems,
+  actSetEntities,
   actSelectionSuccesBatch,
   actSetPage,
   actSetError } from '../actions'
@@ -38,6 +38,9 @@ function * loadEnough ({offset, substr, haveLength, toLength}) {
 
     if (listBatch.length > 0 || isFull) {
       newHaveLength = newHaveLength + listBatch.length
+      yield put(actSetEntities({
+        entities: resultNorm.entities
+      }))
       yield put(actSelectionSuccesBatch({
         fullLength: newHaveLength,
         items: listBatch.slice(),
@@ -47,6 +50,17 @@ function * loadEnough ({offset, substr, haveLength, toLength}) {
       //   toSetPage1 = false
       //   yield put(actSetPage(1))
       // }
+      // // eslint-disable-next-line
+      // let arPm = listBatch.map(name => {
+      //   let url = result.entities.PokemonRefs[name].url
+      //   let arSub = url.split('/')
+      //   let id = arSub[arSub.length - 2]
+
+      //   let urlPic = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+      //   // "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png"
+
+      //   return window.fetch(urlPic)
+      // })
     }
 
     offset = offset + cachePageSize
@@ -133,6 +147,9 @@ function * worker (action) {
       // console.log('type empty')
       // console.log(list)
       // console.log(list.length)
+      yield put(actSetEntities({
+        entities: result.entities
+      }))
       yield put(actSelectionSuccesBatch({
         items: list,
         isFull: true,
