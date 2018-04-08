@@ -23,11 +23,11 @@ export const arColumns = [
     from: 'Name',
     className: 'name'
   },
-  // { column: 'id',
-  //   title: '',
-  //   from: 'id',
-  //   className: 'id'
-  // },
+  { column: 'id',
+    title: '',
+    from: 'id',
+    className: 'id'
+  },
   { column: 'types',
     title: 'Type',
     from: 'types',

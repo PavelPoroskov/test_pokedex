@@ -9,7 +9,8 @@ const selectionItems = (state = [], action) => {
     case CHANGE_FILTER:
       return []
     case SELECTION_SUCCES_BATCH:
-      return [...state, ...action.items]
+      // return [...state, ...action.items]
+      return state.concat(action.items)
     default:
       return state
   }

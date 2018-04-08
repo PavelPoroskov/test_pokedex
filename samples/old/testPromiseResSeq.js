@@ -73,8 +73,7 @@ const promiseArr = [
 // }, Promise.resolve())
 
 promiseArr.reduce((accProm, curProm) =>
-  accProm.then(() =>
-    curProm.then((res) => {
+  accProm.then(() => curProm.then((res) => {
       console.log('=> output ' + res)
       return res
     })

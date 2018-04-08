@@ -1,5 +1,5 @@
-import { call, put, take, takeLatest, select } from 'redux-saga/effects'
-
+import { call, put, take, takeLatest, select, actionChannel } from 'redux-saga/effects'
+import { buffers } from 'redux-saga'
 import { CHANGE_FILTER, SELECTION_CONTINUE } from '../actions/ActionTypes'
 
 import { requestRes, cachePageSize } from '../api/cachedfetch'
@@ -13,14 +13,14 @@ import {
 function * loadEnough ({offset, substr, haveLength, toLength}) {
   let isFull = false
   // let list = []
-  let toSetPage1 = (offset === 0)
+  // let toSetPage1 = (offset === 0)
 
   let newHaveLength = haveLength
 
-  if (toSetPage1) {
-    toSetPage1 = false
-    yield put(actSetPage(1))
-  }
+  // if (toSetPage1) {
+  //   toSetPage1 = false
+  //   yield put(actSetPage(1))
+  // }
 
   while (true) {
     const resultNorm = yield call(requestRes, {
@@ -41,9 +41,12 @@ function * loadEnough ({offset, substr, haveLength, toLength}) {
       yield put(actSetEntities({
         entities: resultNorm.entities
       }))
+      let batch = listBatch.slice()
+      // console.log('SelectionSuccesBatch =>')
+      // console.log(batch)
       yield put(actSelectionSuccesBatch({
         fullLength: newHaveLength,
-        items: listBatch.slice(),
+        items: batch,
         isFull
       }))
       // if (toSetPage1) {
@@ -92,6 +95,9 @@ function * loadPokemonList (substr) {
   let offset = 0
   let isFull = false
 
+  const controlChan = yield actionChannel(SELECTION_CONTINUE, buffers.expanding(10))
+  yield put(actSetPage(1))
+
   const {
     offset: newOffset,
     isFull: newIsFull,
@@ -104,7 +110,7 @@ function * loadPokemonList (substr) {
   //
   // step 2: add items on event 'SELECTION_CONTINUE'
   while (!isFull) {
-    const { needEnd0 } = yield take(SELECTION_CONTINUE)
+    const { needEnd0 } = yield take(controlChan)
     // console.log('continue ')
     // if (fromLength <= haveLength) {
     //   // [fromLength-1, min(newToLength,haveLength)-1]

@@ -1,5 +1,5 @@
-import { call, put, take, takeLatest, select } from 'redux-saga/effects'
-
+import { call, put, take, takeLatest, select, actionChannel } from 'redux-saga/effects'
+import { buffers } from 'redux-saga'
 import { SET_PAGE, SELECTION_SUCCES_BATCH } from '../actions/ActionTypes'
 
 import { requestRes } from '../api/cachedfetch'
@@ -19,6 +19,8 @@ function * loadObjects ({list, preload}) {
   // if (list.length === 0) {
   //   return
   // }
+  // console.log('loadObjects')
+  // console.log(list)
 
   const storedObjs = yield select(state => state.entities.pokemons)
   const storedRefs = yield select(state => state.entities.pokemonRefs)
@@ -41,7 +43,7 @@ function * loadObjects ({list, preload}) {
       })
       let id = storedRefs[name].id
       let urlPic = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
-      arPics.push(window.fetch(urlPic))
+      arPics.push(window.fetch(urlPic, {cache: 'force-cache'}))
     }
   })
   if (arStored.length > 0) {
@@ -82,35 +84,42 @@ const fnSliceSelection = (beg0, end0) =>
   (state) => state.selectionItems.slice(beg0, end0 + 1)
 
 function * loadAndAdd ({pageSize, pageNum, preload}) {
-  let needBeg0 = (pageNum - 1) * pageSize
+  const needBeg0 = (pageNum - 1) * pageSize
   const needEnd0 = needBeg0 + pageSize - 1
 
   // step 1: load item in selection
   const list = yield select(fnSliceSelection(needBeg0, needEnd0))
   yield call(loadObjects, {list, preload})
-  needBeg0 = needBeg0 + list.length
+  let needBegNext0 = needBeg0 + list.length
   //
   // step 2: request add items
-  if (needBeg0 <= needEnd0) {
+  if (needBegNext0 <= needEnd0) {
+    const batchChan = yield actionChannel(SELECTION_SUCCES_BATCH, buffers.expanding(10))
+
     // console.log('please continue load list ' + needEnd0)
     yield put(actSelectionContinueTo(needEnd0))
-  }
 
-  while (needBeg0 <= needEnd0) {
-    const {fullLength} = yield take(SELECTION_SUCCES_BATCH)
+    while (true) {
+      const {fullLength, items} = yield take(batchChan)
+      let haveEnd0 = Math.min(needEnd0, fullLength - 1)
 
-    const haveEnd0 = Math.min(needEnd0, fullLength - 1)
+      if (needBegNext0 <= haveEnd0) {
+        // const list = yield select(fnSliceSelection(needBegNext0, haveEnd0))
+        const list = items.slice(0, haveEnd0 - needBegNext0 + 1)
+        // console.log('list')
+        // console.log(list)
+        yield call(loadObjects, {list, preload})
+        // needBegNext0 = haveEnd0 + 1
+        needBegNext0 = needBegNext0 + list.length
+      }
 
-    if (needBeg0 <= haveEnd0) {
-      // console.log('needBeg0 <= haveEnd0 ' + needBeg0 + '  ' + haveEnd0)
-      const list = yield select(fnSliceSelection(needBeg0, haveEnd0))
-      yield call(loadObjects, {list, preload})
-      // console.log('output added ' + needBeg0 + ', ' + haveEnd0)
-      needBeg0 = haveEnd0 + 1
-    } else {
-      break
+      if (!(needBegNext0 <= needEnd0)) {
+        break
+      }
     }
   }
+
+  // console.log('end loadAndAdd')
 }
 
 function * worker (action) {
@@ -121,8 +130,8 @@ function * worker (action) {
     // main load for current page
     yield call(loadAndAdd, {pageNum, pageSize})
 
-    // preload for next page
-    yield call(loadAndAdd, {pageNum: pageNum + 1, pageSize, preload: true})
+    // // preload for next page
+    // yield call(loadAndAdd, {pageNum: pageNum + 1, pageSize, preload: true})
     //
   } catch (e) {
     const msg = 'saga/page catch err: ' + e.message

@@ -42,7 +42,7 @@ class TablePagination extends Component {
   }
 
   arrangePageNums (currentPage, totalPages, selectionIsFull) {
-    console.log('totalPages ' + totalPages + ' currentPage ' + currentPage + ' selectionIsFull ' + selectionIsFull)
+    // console.log('totalPages ' + totalPages + ' currentPage ' + currentPage + ' selectionIsFull ' + selectionIsFull)
     //
     let beg = -1
     let end = -1
@@ -95,7 +95,7 @@ class TablePagination extends Component {
         return this.arrPageNums
       }
     }
-    console.log('avalableBtn ' + avalableBtn)
+    // console.log('avalableBtn ' + avalableBtn)
 
     if (currentPage < beg) {
       [beg, end] = [currentPage, currentPage + avalableBtn - 1]

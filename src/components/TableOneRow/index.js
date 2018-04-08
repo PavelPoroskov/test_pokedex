@@ -39,12 +39,19 @@ class TableOneRow extends Component {
     return content
   }
 
-  objToRow (obj) {
+  objToRow (name, obj) {
     return arColumns.map(col => {
       let content = null
 
       if (col.from) {
-        if (!obj[col.from]) {
+        if (col.from === 'Name') {
+          return {
+            content: obj ? obj[col.from] : name,
+            className: col.className
+          }
+        }
+
+        if (!obj || !obj[col.from]) {
           return {
             content,
             className: col.className
@@ -52,7 +59,7 @@ class TableOneRow extends Component {
         }
 
         if (col.type === 'image') {
-          content = <img src={obj[col.from]} alt={obj['name']} />
+          content = <img src={obj[col.from]} alt={name} />
         } else if (col.type === 'tags') {
           content = this.drawTypes(obj[col.from])
         } else {
@@ -68,10 +75,10 @@ class TableOneRow extends Component {
   }
 
   render () {
-    const obj = this.props.obj
+    const {id: name, obj} = this.props
     // const {id, obj} = this.props
     // console.log('render TableOneRow, id: ' + id)
-    const row = this.objToRow(obj)
+    const row = this.objToRow(name, obj)
 
     const cells = row.map((cell, ind) =>
       <td key={ind} className={cell.className}>{cell.content}</td>)
