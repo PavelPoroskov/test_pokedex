@@ -6,7 +6,7 @@ import localForage from 'localforage'
 import { normalize } from 'normalizr'
 import schemas from './schemas'
 
-export const cachePageSize = 20
+const cachePageSize = 20
 
 const CACHE_PREFIX = 'pokedex-test-'
 // const urlApi = 'https://pokeapi.co/api/v2/'
@@ -64,7 +64,7 @@ function apiFetch (url, schema) {
   })
 }
 
-const apiCachedBefore = () => {
+const apiCachedPrepare = () => {
   //
   let pmReady = localForage.ready()
   //
@@ -97,7 +97,7 @@ const apiCachedBefore = () => {
   }
 }
 
-const apiCached = apiCachedBefore()
+const apiCached = apiCachedPrepare()
 
 // return one promese
 export function requestRes ({resource, id, offset}) {
@@ -123,5 +123,23 @@ export function requestRes ({resource, id, offset}) {
     let schema = schemas[`${resource}List`]
     const url = `${urlRes}?offset=${offset}&limit=${cachePageSize}`
     return apiCached(url, schema)
+  }
+}
+
+export function requestListPrepare (resource) {
+  if (!resource) {
+    return
+  }
+
+  let savedOffset = 0
+  const savedCachePageSize = cachePageSize
+
+  return () => {
+    let offset = savedOffset
+    savedOffset = savedOffset + savedCachePageSize
+    return requestRes({
+      resource,
+      offset
+    })
   }
 }

@@ -1,6 +1,6 @@
 import { call, put } from 'redux-saga/effects'
 // import { put } from 'redux-saga/effects'
-import { cachePageSize, requestRes } from '../api/cachedfetch'
+import { requestListPrepare } from '../api/cachedfetch'
 
 import { actSetTypeList, actSetError } from '../actions'
 
@@ -9,13 +9,10 @@ function * getTypeList () {
     // const arr = yield all(requestRes, {resource: 'type', offset: 0, limit: 30})
     let list = []
 
-    let offset = 0
+    const fnRequestNextPage = requestListPrepare('type')
+
     while (true) {
-      const resultNorm = yield call(requestRes, {
-        resource: 'type',
-        offset,
-        limit: cachePageSize
-      })
+      const resultNorm = yield call(fnRequestNextPage)
 
       const result = resultNorm.result
 
@@ -23,7 +20,6 @@ function * getTypeList () {
       if (!result.next) {
         break
       }
-      offset = offset + cachePageSize
     }
     // console.log(list)
     yield put(actSetTypeList(list))

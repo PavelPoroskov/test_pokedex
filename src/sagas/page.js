@@ -130,8 +130,8 @@ function * worker (action) {
     // main load for current page
     yield call(loadAndAdd, {pageNum, pageSize})
 
-    // // preload for next page
-    // yield call(loadAndAdd, {pageNum: pageNum + 1, pageSize, preload: true})
+    // preload for next page
+    yield call(loadAndAdd, {pageNum: pageNum + 1, pageSize, preload: true})
     //
   } catch (e) {
     const msg = 'saga/page catch err: ' + e.message

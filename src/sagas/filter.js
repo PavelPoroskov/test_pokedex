@@ -2,7 +2,7 @@ import { call, put, take, takeLatest, select, actionChannel } from 'redux-saga/e
 import { buffers } from 'redux-saga'
 import { CHANGE_FILTER, SELECTION_CONTINUE } from '../actions/ActionTypes'
 
-import { requestRes, cachePageSize } from '../api/cachedfetch'
+import { requestRes, requestListPrepare } from '../api/cachedfetch'
 
 import {
   actSetEntities,
@@ -10,7 +10,7 @@ import {
   actSetPage,
   actSetError } from '../actions'
 
-function * loadEnough ({offset, substr, haveLength, toLength}) {
+function * loadEnough ({fnRequestNextPage, substr, haveLength, toLength}) {
   let isFull = false
   // let list = []
   // let toSetPage1 = (offset === 0)
@@ -23,10 +23,7 @@ function * loadEnough ({offset, substr, haveLength, toLength}) {
   // }
 
   while (true) {
-    const resultNorm = yield call(requestRes, {
-      resource: 'pokemon',
-      offset
-    })
+    const resultNorm = yield call(fnRequestNextPage)
     const result = resultNorm.result
     const list = result.results
     let listBatch = list
@@ -49,25 +46,7 @@ function * loadEnough ({offset, substr, haveLength, toLength}) {
         items: batch,
         isFull
       }))
-      // if (toSetPage1) {
-      //   toSetPage1 = false
-      //   yield put(actSetPage(1))
-      // }
-      // // eslint-disable-next-line
-      // let arPm = listBatch.map(name => {
-      //   let url = result.entities.PokemonRefs[name].url
-      //   let arSub = url.split('/')
-      //   let id = arSub[arSub.length - 2]
-
-      //   let urlPic = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
-      //   // "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png"
-
-      //   return window.fetch(urlPic)
-      // })
     }
-
-    offset = offset + cachePageSize
-    // offset = offset + list.length
 
     if (toLength <= newHaveLength || isFull) {
       break
@@ -75,7 +54,6 @@ function * loadEnough ({offset, substr, haveLength, toLength}) {
   }
 
   return {
-    offset,
     isFull,
     haveLength: newHaveLength
   }
@@ -88,22 +66,22 @@ function * loadPokemonList (substr) {
   // step 1: load enough items
 
   const pageUISize = yield select(state => state.pageSize)
-  // let toLength = pageUISize + 1
-  let toLength = pageUISize
+  // let toLength = pageUISize
+  // preload
+  let toLength = pageUISize + 1
 
   let haveLength = 0
-  let offset = 0
   let isFull = false
 
   const controlChan = yield actionChannel(SELECTION_CONTINUE, buffers.expanding(10))
   yield put(actSetPage(1))
 
+  const fnRequestNextPage = requestListPrepare('pokemon')
+
   const {
-    offset: newOffset,
     isFull: newIsFull,
     haveLength: newHaveLength
-  } = yield call(loadEnough, {offset, substr, haveLength, toLength})
-  offset = newOffset
+  } = yield call(loadEnough, {fnRequestNextPage, substr, haveLength, toLength})
   haveLength = newHaveLength
   isFull = newIsFull
 
@@ -111,24 +89,18 @@ function * loadPokemonList (substr) {
   // step 2: add items on event 'SELECTION_CONTINUE'
   while (!isFull) {
     const { needEnd0 } = yield take(controlChan)
-    // console.log('continue ')
-    // if (fromLength <= haveLength) {
-    //   // [fromLength-1, min(newToLength,haveLength)-1]
-    //   // yield put(actPageUpdate(pageNum))
-    // }
-    // const toEnd0 = needEnd0 + 1
-    // toLength = toEnd0 + 1
-    toLength = needEnd0 + 1
+    // toLength = needEnd0 + 1
+    // preload
+    const toEnd0 = needEnd0 + 1
+    toLength = toEnd0 + 1
     if (toLength <= haveLength) {
       continue
     }
 
     const {
-      offset: newOffset,
       isFull: newIsFull,
       haveLength: newHaveLength
-    } = yield call(loadEnough, {offset, substr, haveLength, toLength})
-    offset = newOffset
+    } = yield call(loadEnough, {fnRequestNextPage, substr, haveLength, toLength})
     haveLength = newHaveLength
     isFull = newIsFull
   }
