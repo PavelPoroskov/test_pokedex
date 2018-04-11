@@ -4,31 +4,11 @@ import { connect } from 'react-redux'
 import {createSelector} from 'reselect'
 
 import { PaginationNumBtnsQuantity } from '../../constants'
+import { range } from '../../api/utils'
 
 import { actSetPage } from '../../actions'
 
 import '../../styles/css/TablePagination.css'
-
-const range = (beg, end) => {
-  let arr = []
-  let cur = beg
-  while (cur <= end) {
-    arr.push(cur)
-    cur++
-  }
-  return arr
-}
-
-// const unitArr = (arrBeg, arrMid, arrEnd) => {
-//   let arr = arrBeg
-//   if (arrMid) {
-//     arr = arr.concat(arrMid)
-//   }
-//   if (arrEnd) {
-//     arr = arr.concat(arrEnd)
-//   }
-//   return arr
-// }
 
 class TablePagination extends Component {
   constructor (props) {

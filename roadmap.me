@@ -1,19 +1,24 @@
-filter "ee"/ "mega" 1row
-first page 6 rows, must 7
-  clear filter and filter "ee": show 7 rows
-
-pokemon, merge
-  list -> {name, id, url, imgurl, }
-  loadObj +{..., attributes}
-
 do responsive
   breakpoints
-  font-size: rem/em
+  font-size: 
+    rem change font size for <html> 16px
+    /em 
 
-  equal
-    color
-    font
-    font-size
+  equal: color, font, font-size
+
+show first name and avatar
+loading: animation
+after load object show attributes
+  ?after load obj how call redraw one row(one <td>) --> change state
+    reselect-map
+pokemon, merge, without store.entities.pokemonRefs
+  list -> {name, id, url, imgurl, }
+  loadObj +{..., ...attributes, loaded:true}
+
+auto page size (quantity of rows)
+
+pagination
+  selected text on buttons
 
 server
   ui:login/logout
@@ -23,29 +28,45 @@ server
   heroku
   mongodb
 
-preload pics
+css animation
+new raw
+big avatar
+  hover avatar
+  hoven line => dedicated img abov table
+shiny new, after default_sprite
+back: hover end
 
 problems
+TableWithData draw 2 times, first no need?
+
+)?event PAGE_SUCCES_END
+  sandwatch/ css animation 
+    -(google login: top bar)
+
+use PWA
+??use ServiceWorker for fetching
+
+.preload pics
+
 ).pagination, not jump, nature reaction
   next: curBtn + 1 or shift pagination and last btn
   prev: curBtn - 1 or shift pagination and first btn
-)?event PAGE_SUCCES_END
-  sandwatch/ css animation (google login: top bar)
-) filter 'dr' / 'ul' / 'mega' & BUG
+). filter 'dr' / 'ul' / 'mega' & BUG
   not all result on page
   reclick page => show all
-    ?one unfetched item stop all next items
+    ?one unfetched item stop all next items: NOT
       : try{}catch() {}
         retry later?
 
-  show first name and avatar
-  afte load object show attributes
+  filter "ee"/ "mega" 1row
+  first page 6 rows, must 7
+    clear filter and filter "ee": show 7 rows
 
-) click Last, click First: not react
+  :use actionChannel
+
+). click Last, click First: not react
     ?streatch link on hole button
 
-
-TableWithData draw 2 times, first no need?
 
 .TableWithData header witwout rows looks bad
   set min-width/max-width of columns
@@ -58,16 +79,6 @@ TableWithData draw 2 times, first no need?
   +step1) cache full object
   +step2) cache simplified obj
   +step3) w/o lib, my code (cache or (fetch_normalize_and_cache)
-use PWA
-??use ServiceWorker for fetching
-
-css animation
-new raw
-big avatar
-  hover avatar
-  hoven line => dedicated img abov table
-shiny new, after default_sprite
-back: hover end
 
 
 .pagination
@@ -76,4 +87,4 @@ back: hover end
 .preload next page
   ?fork/cancel preload
 
-?use chanel selection > pagination
+.?use chanel selection > pagination
