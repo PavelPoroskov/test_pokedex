@@ -5,7 +5,8 @@ import TableRows from '../TableRows'
 
 import {arColumns} from '../../constants'
 
-import '../../styles/css/TableWithData.css'
+// import '../../styles/css/TableWithData.css'
+import './TableWithData.styl'
 
 class TableWithData extends Component {
   render () {

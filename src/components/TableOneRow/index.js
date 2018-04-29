@@ -6,7 +6,8 @@ import {arColumns} from '../../constants'
 
 import TypeLabel from '../TypeLabel'
 
-import '../../styles/css/TableOneRow.css'
+// import '../../styles/css/TableOneRow.css'
+import './TableOneRow.styl'
 
 class TableOneRow extends Component {
   shouldComponentUpdate (nextProps, nextState) {

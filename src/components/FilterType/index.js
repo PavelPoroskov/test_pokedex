@@ -5,7 +5,8 @@ import {createSelector} from 'reselect'
 
 import { actChangeFilter } from '../../actions'
 
-import '../../styles/css/FilterType.css'
+// import '../../styles/css/FilterType.css'
+import './FilterType.styl'
 
 class FilterType extends Component {
   constructor (props) {

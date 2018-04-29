@@ -8,7 +8,8 @@ import { range } from '../../api/utils'
 
 import { actSetPage } from '../../actions'
 
-import '../../styles/css/TablePagination.css'
+// import '../../styles/css/TablePagination.css'
+import './TablePagination.styl'
 
 class TablePagination extends Component {
   constructor (props) {

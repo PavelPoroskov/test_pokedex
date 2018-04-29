@@ -6,7 +6,8 @@ import debounce from 'lodash.debounce'
 
 import { actChangeFilter } from '../../actions'
 
-import '../../styles/css/FilterName.css'
+// import '../../styles/css/FilterName.css'
+import './FilterName.styl'
 
 class FilterName extends Component {
   constructor (props) {

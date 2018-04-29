@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 
 import { actChangeFilter } from '../../actions'
 
-import '../../styles/css/TypeLabel.css'
+// import '../../styles/css/TypeLabel.css'
+import './TypeLabel.styl'
 
 class TypeLabel extends Component {
   constructor (props) {
