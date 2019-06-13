@@ -1,4 +1,4 @@
-This repository is archived. It contained errors in architechture.  
+This repository is archived. It contained errors in architecture.  
 See new version in https://github.com/PavelPoroskov/test-pokedex-rest 
 
 # test_pokedex
