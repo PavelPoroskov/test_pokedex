@@ -1,3 +1,5 @@
+This repository is archived. It contained errors in architechture. See https://github.com/PavelPoroskov/test-pokedex-rest 
+
 # test_pokedex
 
 Тестовая задача: используя внешнее REST API (pokemon API (http://pokeapi.co), вывести таблицу с фильтрацией по имени и по типу, пагинация, верстка, респонсивность.
