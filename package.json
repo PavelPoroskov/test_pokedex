@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "http://PavelPoroskov.github.io/test_pokedex",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "localforage": "^1.7.1",
     "lodash.debounce": "^4.0.8",
     "normalizr": "^3.2.4",
