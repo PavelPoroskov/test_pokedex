@@ -105,7 +105,7 @@
     "npm-run-all": "^4.1.2",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
-    "react-dev-utils": "^5.0.1",
+    "react-dev-utils": "^11.0.4",
     "style-loader": "0.19.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
