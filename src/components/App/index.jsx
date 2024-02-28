@@ -13,7 +13,7 @@ class App extends Component {
     return (
       <div className='App'>
         <div className='AppHeader'>
-          Pokedex
+          Pokedex. v0.2
         </div>
         <div className='Filter'>
           <FilterName />

@@ -1,5 +1,4 @@
 import { call, put } from 'redux-saga/effects'
-// import { put } from 'redux-saga/effects'
 import { requestListPrepare } from '../api/cachedfetch'
 
 import { actSetTypeList, actSetError } from '../actions'

@@ -1,14 +1,14 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
 
 // import { initPageSize } from './constants'
 // import { actSetPageSize, actFetchPokemons } from './actions'
 
-import {actChangeFilter} from './actions'
+import { actChangeFilter } from './actions'
 import rootSaga from './sagas'
 import reducer from './reducers'
 
@@ -17,24 +17,20 @@ import App from './components/App'
 // import './styles/css/index.css'
 
 const sagaMiddleware = createSagaMiddleware()
-
-const store = createStore(
+const middleware = [sagaMiddleware]
+const store = configureStore({
   reducer,
-  applyMiddleware(sagaMiddleware)
-)
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middleware)
+})
 
 sagaMiddleware.run(rootSaga)
 
-// // store.dispatch(actSetPageSize(initPageSize))
-// store.dispatch(actFetchPage({
-//   resource: 'pokemon',
-//   offcet: 0,
-//   limit: initPageSize
-// }))
 store.dispatch(actChangeFilter())
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root'))
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>
+)

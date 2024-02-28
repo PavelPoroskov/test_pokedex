@@ -1,5 +1,3 @@
-// import {cachePageSize} from './api/cachedfetch'
-
 export const initUIPageSize = 7
 
 export const PaginationNumBtnsQuantity = 5
@@ -12,59 +10,70 @@ export const STATUS_ERROR = 'STATUS_ERROR'
 
 // column
 export const arColumns = [
-  { column: 'avatar',
+  {
+    column: 'avatar',
     title: '#',
     from: 'front_default',
     type: 'image',
     className: 'avatar'
   },
-  { column: 'name',
+  {
+    column: 'name',
     title: 'Name',
     from: 'Name',
     className: 'name'
   },
-  { column: 'id',
+  {
+    column: 'id',
     title: '',
     from: 'id',
     className: 'id'
   },
-  { column: 'types',
+  {
+    column: 'types',
     title: 'Type',
     from: 'types',
     type: 'tags',
     className: 'col-types'
   },
-  { column: 'total',
+  {
+    column: 'total',
     title: 'Total',
     from: 'total',
     className: 'number number-total'
   },
-  { column: 'hp',
+  {
+    column: 'hp',
     title: 'HP',
     from: 'hp',
     className: 'number'
   },
-  { column: 'attack',
+  {
+    column: 'attack',
     title: 'Attack',
     from: 'attack',
     className: 'number'
   },
-  { column: 'defense',
+  {
+    column: 'defense',
     title: 'Defense',
     from: 'defense',
     className: 'number'
   },
-  { column: 'sp_attack',
+  {
+    column: 'sp_attack',
     title: 'Sp. Atk',
     from: 'special-attack',
     className: 'number'
   },
-  { column: 'sp_defense',
+  {
+    column: 'sp_defense',
     title: 'Sp. Def',
     from: 'special-defense',
     className: 'number'
   },
-  { column: 'speed',
+  {
+    column: 'speed',
     title: 'Speed',
     from: 'speed',
     className: 'number'
