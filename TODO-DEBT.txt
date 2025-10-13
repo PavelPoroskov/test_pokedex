@@ -1,0 +1,12 @@
+do not use npm i --force (npm audit fix --force)
+  do changes: replace version or npm module
+
+dev eslint@"^9.33.0" from the root project
+peer eslint@"^8.0.1" from eslint-config-standard@17.1.0
+  dev eslint-config-standard@"^17.1.0" from the root project
+
+solution?
+
+
+use eslint@9 config file
+use vite@7
